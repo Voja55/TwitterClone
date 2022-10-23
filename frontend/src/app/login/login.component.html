@@ -1,0 +1,49 @@
+<br/>
+<div class="container">
+    <div [hidden]="submitted">
+      <form #userForm="ngForm">
+
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username"
+                required
+                [(ngModel)]="user.username" name="name"
+                #name="ngModel">
+              <div [hidden]="name.valid || !name.touched"
+                class="alert alert-danger">
+                Username is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password"
+                required
+                [(ngModel)]="user.password" name="password"
+                #password="ngModel">
+              <div [hidden]="password.valid || !password.touched"
+                class="alert alert-danger">
+                Password is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br/>
+
+        <div class="row">      
+          <div class="col-md-10 offset-md-1">
+            <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid" (click)="login()">Login</button>
+          </div>
+        </div>
+            
+      </form>
+    </div>
+  
+  </div>
