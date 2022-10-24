@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Tweet } from '../model/tweet';
 
 @Component({
   selector: 'app-tweet',
@@ -13,6 +14,6 @@ export class TweetComponent implements OnInit {
   }
 
   @Input()
-  tweet : any = new Object;
+  tweet : any
 
 }
