@@ -14,6 +14,7 @@ import { RegisterBusinessUserComponent } from './register-business-user/register
 import { TweetsComponent } from './tweets/tweets.component';
 import { TweetPopupComponent } from './tweet-popup/tweet-popup.component';
 import { TweetComponent } from './tweet/tweet.component';
+import { BusinessAccountComponent } from './business-account/business-account.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { TweetComponent } from './tweet/tweet.component';
     RegisterBusinessUserComponent,
     TweetsComponent,
     TweetPopupComponent,
-    TweetComponent
+    TweetComponent,
+    BusinessAccountComponent
   ],
   imports: [
     BrowserModule,
