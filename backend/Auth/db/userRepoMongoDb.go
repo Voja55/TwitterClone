@@ -4,6 +4,7 @@ import (
 	"12factorapp/data"
 	"context"
 	"encoding/json"
+	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
@@ -21,7 +22,7 @@ func NewUserRepoDB(log *log.Logger, client *mongo.Client) (UserRepoMongoDb, erro
 
 func (u UserRepoMongoDb) GetUsers() data.Users {
 	u.logger.Println("Getting users...")
-	coll := u.client.Database("myDb").Collection("users")
+	coll := u.client.Database("myDB").Collection("users")
 	filter := bson.D{}
 	cursor, err := coll.Find(context.TODO(), filter)
 	if err != nil {
@@ -58,6 +59,17 @@ func (u UserRepoMongoDb) AddUser(p *data.User) {
 }
 
 func (u UserRepoMongoDb) GetUser(id int) (data.User, error) {
-	//TODO implement me
-	panic("implement me")
+	u.logger.Printf("Getting user ", id)
+	var result data.User
+
+	coll := u.client.Database("myDB").Collection("users")
+	filter := bson.D{{"id", id}}
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		u.logger.Println(err)
+		return result, errors.New("couldn't find user")
+	}
+
+	return result, nil
 }
