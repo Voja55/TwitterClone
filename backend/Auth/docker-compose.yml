@@ -19,3 +19,11 @@ services:
       - "8000:8000"
     volumes:
       -  ./.env:/usr/bin/.env
+  db:
+      image: mongo
+      container_name: db
+      restart: on-failure
+      ports:
+          - "27017:27017"
+      volumes:
+        -   /mongo/data

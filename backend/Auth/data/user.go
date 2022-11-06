@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"go.mongodb.org/mongo-driver/bson"
 	"io"
 )
 
@@ -32,6 +33,16 @@ func (p *User) ToJSON(w io.Writer) error {
 func (p *User) FromJSON(r io.Reader) error {
 	d := json.NewDecoder(r)
 	return d.Decode(p)
+}
+
+func (p *User) ToBson() (doc *bson.D, err error) {
+	data, err := bson.Marshal(p)
+	if err != nil {
+		return
+	}
+
+	err = bson.Unmarshal(data, &doc)
+	return
 }
 
 //Function to validate the incoming object from front.

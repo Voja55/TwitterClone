@@ -4,6 +4,8 @@ import (
 	"12factorapp/db"
 	"12factorapp/handlers"
 	"context"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
 	"os"
@@ -17,6 +19,17 @@ import (
 )
 
 func main() {
+	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
+	clientOptions := options.Client().
+		ApplyURI("mongodb+srv://soaproject:v4ormoyoK9f7hxiq@soacluster.v3yc0kn.mongodb.net/?retryWrites=true&w=majority").
+		SetServerAPIOptions(serverAPIOptions)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	//Initialize the logger we are going to use, with prefix and datetime for every log
 	//As per 12 factor app the general place for app to log is the standard output.
 	//If you want to save the logs to a file run the app with the following command.
@@ -42,7 +55,7 @@ func main() {
 
 	//Initialize the repository that uses the actual database. If the in memory counter part is to be used,
 	//swap out the call to 'NewPostgreSql' to 'NewInMemory' and rerun the program.
-	userRepo, err := db.NewInMemoryRepo(logger)
+	userRepo, err := db.NewUserRepoDB(logger, client)
 
 	if err != nil {
 		logger.Fatal(err)
@@ -101,7 +114,7 @@ func main() {
 	logger.Println("Received terminate, graceful shutdown", sig)
 	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
 
-	//Try to shutdown gracefully
+	//Try to shut down gracefully
 	if server.Shutdown(timeoutContext) != nil {
 		logger.Fatal("Cannot gracefully shutdown...")
 	}
