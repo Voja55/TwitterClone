@@ -15,7 +15,6 @@ type User struct {
 	Gender    bool   `json:"gender"`
 	Age       int8   `json:"age"`
 	Address   string `json:"address"`
-	//Sku    string  `json:"sku" validate:"required,sku"` //the tag "sku" is there so we can add custom validation
 }
 
 type Users []*User
@@ -44,31 +43,3 @@ func (p *User) ToBson() (doc *bson.D, err error) {
 	err = bson.Unmarshal(data, &doc)
 	return
 }
-
-//Function to validate the incoming object from front.
-//NOTE: if the tag "sku" is not present in the struct anotations we will get an error
-
-//func (p *User) Validate() error {
-//	validate := validator.New()
-//
-//	err := validate.RegisterValidation("sku", validateSKU)
-//	if err != nil {
-//		return err
-//	}
-//
-//	return validate.Struct(p)
-//}
-
-//We use a regex to validate a custom look of sku-s
-//For eg: abc-abc-abc
-
-//func validateSKU(fl validator.FieldLevel) bool {
-//	re := regexp.MustCompile("[a-z]+-[a-z]+-[a-z]")
-//	matches := re.FindAllString(fl.Field().String(), -1)
-//
-//	if len(matches) != 1 {
-//		return false
-//	}
-//
-//	return true
-//}

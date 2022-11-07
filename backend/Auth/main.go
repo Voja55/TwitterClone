@@ -71,6 +71,9 @@ func main() {
 	getUsersRouter := routerUser.Methods(http.MethodGet).Subrouter()
 	getUsersRouter.HandleFunc("/users", usersHandler.GetUsers)
 
+	loginUserRouter := routerUser.Methods(http.MethodPost).Subrouter()
+	loginUserRouter.HandleFunc("/login", usersHandler.LoginUser)
+
 	getUserRouter := routerUser.Methods(http.MethodGet).Subrouter()
 	getUserRouter.HandleFunc("/users/{id:[0-9]+}", usersHandler.GetUser)
 	getUserRouter.Use(usersHandler.MiddlewareUsersValidation)

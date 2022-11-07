@@ -17,9 +17,17 @@ type UsersHandler struct {
 	userRepo db.UserRepo
 }
 
-//Injecting the logger makes this code much more testable.
+// Injecting the logger makes this code much more testable.
 func NewUsersHandler(l *log.Logger, ur db.UserRepo) *UsersHandler {
 	return &UsersHandler{l, ur}
+}
+
+func isEmpty(data string) bool {
+	if len(data) <= 0 {
+		return true
+	} else {
+		return false
+	}
 }
 
 func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
@@ -60,6 +68,15 @@ func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 	}
 
 	rw.WriteHeader(http.StatusOK)
+}
+
+func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
+	username := req.FormValue("username")
+	password := req.FormValue("password")
+	if !isEmpty(username) && !isEmpty(password) {
+		//loggeduser, err := u.LoginUser(username, password)
+	}
+
 }
 
 func (u *UsersHandler) PostUser(rw http.ResponseWriter, h *http.Request) {
