@@ -10,7 +10,7 @@ type User struct {
 	ID        int    `json:"id"`
 	Username  string `json:"username" validate:"required"`
 	Password  string `json:"password" validate:"required"`
-	Role      ERole  `json:"role"`
+	Role      ERole  `json:"role" validate:"required"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Gender    bool   `json:"gender"`

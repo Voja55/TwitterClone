@@ -74,11 +74,12 @@ func (u UserRepoMongoDb) GetUser(id int) (data.User, error) {
 	return result, nil
 }
 
-func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User, error) {
+func (u UserRepoMongoDb) LoginUser(username string, password string) (data.LogedUser, error) {
 	u.logger.Printf("Checking user...")
-	var result data.User
+	var result data.LogedUser
 
-	coll := u.client.Database("myDB").Collection("users")
+	//u bazi ludilo mozga, treba zajednicka kolekcija da se napravi za sve tipove radi auth
+	coll := u.client.Database("myDB").Collection("allUsers")
 	filter := bson.D{{"username", username}, {"password", password}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 
