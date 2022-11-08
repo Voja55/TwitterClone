@@ -81,7 +81,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	u.logger.Println(logged)
 	if !isEmpty(logged.Username) && !isEmpty(logged.Password) {
 
-		_, err := u.userRepo.LoginUser(logged.Username, logged.Password)
+		user, err := u.userRepo.LoginUser(logged.Username, logged.Password)
 		if err != nil {
 			http.Error(rw, "Unable to login", http.StatusInternalServerError)
 			u.logger.Println("Unable to login", err)
@@ -89,8 +89,14 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 			rw.Write([]byte("401 - Unauthorized"))
 			return
 		}
+
+		var userResponse = make(map[string]string)
+		userResponse["username"] = user.Username
+		userResponse["role"] = string(user.Role)
+		jsonUser, err := json.Marshal(userResponse)
 		rw.WriteHeader(http.StatusOK)
-		rw.Write([]byte("200 - OK"))
+		rw.Header().Set("Content-Type", "aplication/json")
+		rw.Write(jsonUser)
 	}
 }
 

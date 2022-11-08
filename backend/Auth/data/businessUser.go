@@ -10,6 +10,7 @@ type BusinessUser struct {
 	ID          int    `json:"id"`
 	Username    string `json:"username" validate:"required"`
 	Password    string `json:"password" validate:"required"`
+	Role        ERole  `json:"role"`
 	CompanyName string `json:"companyName"`
 	Email       string `json:"email"`
 	Website     string `json:"website"`
