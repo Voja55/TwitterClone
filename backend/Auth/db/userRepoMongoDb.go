@@ -74,7 +74,7 @@ func (u UserRepoMongoDb) GetUser(id int) (data.User, error) {
 	return result, nil
 }
 
-func (u UserRepoMongoDb) GetLoginUser(username string, password string) (data.User, error) {
+func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User, error) {
 	u.logger.Printf("Checking user...")
 	var result data.User
 

@@ -6,5 +6,5 @@ type UserRepo interface {
 	GetUsers() data.Users
 	AddUser(p *data.User)
 	GetUser(id int) (data.User, error)
-	GetLoginUser(username string, password string) (data.User, error)
+	LoginUser(username string, password string) (data.User, error)
 }

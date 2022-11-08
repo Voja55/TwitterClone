@@ -21,7 +21,7 @@ import (
 func main() {
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client().
-		ApplyURI("mongodb+srv://soaproject:v4ormoyoK9f7hxiq@soacluster.v3yc0kn.mongodb.net/?retryWrites=true&w=majority").
+		ApplyURI("mongodb+srv://soaproject:2YEa9zXdAa8iJjbB@soacluster.v3yc0kn.mongodb.net/?retryWrites=true&w=majority").
 		SetServerAPIOptions(serverAPIOptions)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

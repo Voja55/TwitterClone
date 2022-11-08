@@ -18,17 +18,14 @@ type UsersHandler struct {
 	userRepo db.UserRepo
 }
 
+type LogUser struct {
+	Username string
+	Password string
+}
+
 // Injecting the logger makes this code much more testable.
 func NewUsersHandler(l *log.Logger, ur db.UserRepo) *UsersHandler {
 	return &UsersHandler{l, ur}
-}
-
-func isEmpty(data string) bool {
-	if len(data) <= 0 {
-		return true
-	} else {
-		return false
-	}
 }
 
 func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
@@ -71,44 +68,29 @@ func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 }
 
-type Log_user struct {
-	Username string
-	Password string
-}
-
 func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
-	//username := req.FormValue("username")
-	//password := req.FormValue("password")
-	//vars := req.Body
-	//username := strconv.Quote(vars.)
-	//password := strconv.Quote(vars["password"])
-	//if err != nil {
-	//	http.Error(rw, "Unable to convert username and pass to json", http.StatusInternalServerError)
-	//	u.logger.Println("Unable to convert to json :", err)
-	//	return
-	//}
-	//if !isEmpty(username) && !isEmpty(password) {
-	//
-	//	loggeduser, err := u.LoginUser(username, password)
-	//}
 	decoder := json.NewDecoder(req.Body)
-	var logu Log_user
-	err := decoder.Decode(&logu)
+	var logged LogUser
+	err := decoder.Decode(&logged)
+
 	if err != nil {
 		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
 		u.logger.Println("Unable to convert to json :", err)
 		return
 	}
-	u.logger.Println(logu)
-	if !isEmpty(logu.Username) && !isEmpty(logu.Password) {
+	u.logger.Println(logged)
+	if !isEmpty(logged.Username) && !isEmpty(logged.Password) {
 
-		loggeduser, err := u.userRepo.GetLoginUser(logu.Username, logu.Password)
+		_, err := u.userRepo.LoginUser(logged.Username, logged.Password)
 		if err != nil {
 			http.Error(rw, "Unable to login", http.StatusInternalServerError)
 			u.logger.Println("Unable to login", err)
+			rw.WriteHeader(http.StatusUnauthorized)
+			rw.Write([]byte("401 - Unauthorized"))
 			return
 		}
-		u.logger.Println(loggeduser)
+		rw.WriteHeader(http.StatusOK)
+		rw.Write([]byte("200 - OK"))
 	}
 }
 
@@ -132,23 +114,12 @@ func (u *UsersHandler) MiddlewareUsersValidation(next http.Handler) http.Handler
 			return
 		}
 
-		//TODO nema sku, pa ne radi
-		//err = user.Validate()
-		//
-		//if err != nil {
-		//	u.logger.Println("Error validating product", err)
-		//	http.Error(rw, fmt.Sprintf("Error validating product: %s", err), http.StatusBadRequest)
-		//	return
-		//}
-
 		ctx := context.WithValue(h.Context(), KeyUser{}, user)
 		h = h.WithContext(ctx)
 
 		next.ServeHTTP(rw, h)
 	})
 }
-
-//Middleware to centralize general logging and to add the header values for all requests.
 
 func (u *UsersHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
@@ -158,4 +129,12 @@ func (u *UsersHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler 
 
 		next.ServeHTTP(rw, h)
 	})
+}
+
+func isEmpty(data string) bool {
+	if len(data) <= 0 {
+		return true
+	} else {
+		return false
+	}
 }
