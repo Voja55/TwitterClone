@@ -23,7 +23,7 @@ type LogUser struct {
 	Password string
 }
 
-// Injecting the logger makes this code much more testable.
+// NewUsersHandler Injecting the logger makes this code much more testable.
 func NewUsersHandler(l *log.Logger, ur db.UserRepo) *UsersHandler {
 	return &UsersHandler{l, ur}
 }

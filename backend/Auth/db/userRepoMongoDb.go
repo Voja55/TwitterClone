@@ -89,3 +89,57 @@ func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User,
 
 	return result, nil
 }
+
+func (u UserRepoMongoDb) GetBusinessUsers() data.BusinessUsers {
+	u.logger.Println("Getting users...")
+	coll := u.client.Database("myDB").Collection("businessUsers")
+	filter := bson.D{}
+	cursor, err := coll.Find(context.TODO(), filter)
+	if err != nil {
+		u.logger.Println(err)
+	}
+
+	var results []*data.BusinessUser
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		u.logger.Println(err)
+	}
+
+	for _, result := range results {
+		cursor.Decode(&result)
+		output, err := json.MarshalIndent(result, "", "    ")
+		if err != nil {
+			u.logger.Println(err)
+		}
+		u.logger.Printf("%s\n", output)
+	}
+	return results
+}
+
+func (u UserRepoMongoDb) AddBusinessUser(p *data.BusinessUser) {
+	u.logger.Println("Inserting user...")
+	coll := u.client.Database("myDB").Collection("businessUsers")
+	user, err := p.ToBson()
+
+	result, err := coll.InsertOne(context.TODO(), user)
+	if err != nil {
+		u.logger.Println(err)
+	}
+
+	u.logger.Printf("Inserted user with _id: %v\n", result.InsertedID)
+}
+
+func (u UserRepoMongoDb) GetBusinessUser(id int) (data.BusinessUser, error) {
+	u.logger.Printf("Getting user ", id)
+	var result data.BusinessUser
+
+	coll := u.client.Database("myDB").Collection("businessUsers")
+	filter := bson.D{{"id", id}}
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		u.logger.Println(err)
+		return result, errors.New("couldn't find user")
+	}
+
+	return result, nil
+}
