@@ -4,6 +4,7 @@ import (
 	"12factorapp/data"
 	"12factorapp/db"
 	"context"
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -70,13 +71,45 @@ func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 }
 
-func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
-	username := req.FormValue("username")
-	password := req.FormValue("password")
-	if !isEmpty(username) && !isEmpty(password) {
-		//loggeduser, err := u.LoginUser(username, password)
-	}
+type Log_user struct {
+	Username string
+	Password string
+}
 
+func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
+	//username := req.FormValue("username")
+	//password := req.FormValue("password")
+	//vars := req.Body
+	//username := strconv.Quote(vars.)
+	//password := strconv.Quote(vars["password"])
+	//if err != nil {
+	//	http.Error(rw, "Unable to convert username and pass to json", http.StatusInternalServerError)
+	//	u.logger.Println("Unable to convert to json :", err)
+	//	return
+	//}
+	//if !isEmpty(username) && !isEmpty(password) {
+	//
+	//	loggeduser, err := u.LoginUser(username, password)
+	//}
+	decoder := json.NewDecoder(req.Body)
+	var logu Log_user
+	err := decoder.Decode(&logu)
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		u.logger.Println("Unable to convert to json :", err)
+		return
+	}
+	u.logger.Println(logu)
+	if !isEmpty(logu.Username) && !isEmpty(logu.Password) {
+
+		loggeduser, err := u.userRepo.GetLoginUser(logu.Username, logu.Password)
+		if err != nil {
+			http.Error(rw, "Unable to login", http.StatusInternalServerError)
+			u.logger.Println("Unable to login", err)
+			return
+		}
+		u.logger.Println(loggeduser)
+	}
 }
 
 func (u *UsersHandler) PostUser(rw http.ResponseWriter, h *http.Request) {
