@@ -7,6 +7,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -49,8 +50,9 @@ func (u UserRepoMongoDb) GetUsers() data.Users {
 func (u UserRepoMongoDb) Register(p *data.User) bool {
 	u.logger.Println("Registering user...")
 	coll := u.client.Database("myDB").Collection("users")
+	id := uuid.New()
+	p.ID = id.String()
 	user, err := p.ToBson()
-
 	result, err := coll.InsertOne(context.TODO(), user)
 	if err != nil {
 		u.logger.Println(err)
