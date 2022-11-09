@@ -7,4 +7,5 @@ type UserRepo interface {
 	GetUser(id int) (data.User, error)
 	LoginUser(username string, password string) (data.User, error)
 	Register(p *data.User) bool
+	GetUserByUsername(username string) (data.User, error)
 }

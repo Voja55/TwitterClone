@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	ID       int    `json:"id"`
+	ID       string    `json:"id"`
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 	Role     ERole  `json:"role"`

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -49,8 +50,9 @@ func (u UserRepoMongoDb) GetUsers() data.Users {
 func (u UserRepoMongoDb) Register(p *data.User) bool {
 	u.logger.Println("Registering user...")
 	coll := u.client.Database("myDB").Collection("users")
+	id := uuid.New()
+	p.ID = id.String()
 	user, err := p.ToBson()
-
 	result, err := coll.InsertOne(context.TODO(), user)
 	if err != nil {
 		u.logger.Println(err)
@@ -89,6 +91,22 @@ func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User,
 	if err != nil {
 		u.logger.Println(err)
 		return result, errors.New("wrong username or password")
+	}
+
+	return result, nil
+}
+
+func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
+	u.logger.Printf("Getting user ", username)
+	var result data.User
+
+	coll := u.client.Database("myDB").Collection("users")
+	filter := bson.D{{"username", username}}
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		u.logger.Println(err)
+		return result, errors.New("couldn't find user")
 	}
 
 	return result, nil
