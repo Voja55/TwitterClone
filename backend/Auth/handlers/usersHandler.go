@@ -5,10 +5,11 @@ import (
 	"12factorapp/db"
 	"context"
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type KeyUser struct{}
@@ -100,10 +101,12 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (u *UsersHandler) PostUser(rw http.ResponseWriter, h *http.Request) {
-	user := h.Context().Value(KeyUser{}).(*data.User)
-	u.userRepo.AddUser(user)
-	rw.WriteHeader(http.StatusCreated)
+func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
+	user := h.Context().Value(KeyUser{}).(*data.RegisterUser)
+	if u.userRepo.Register(user) == true {
+		return
+	}
+	rw.WriteHeader(http.StatusNotAcceptable)
 }
 
 //Middleware to try and decode the incoming body. When decoded we run the validation on it just to check if everything is okay

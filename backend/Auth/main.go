@@ -4,14 +4,15 @@ import (
 	"12factorapp/db"
 	"12factorapp/handlers"
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -79,7 +80,7 @@ func main() {
 	getUserRouter.Use(usersHandler.MiddlewareUsersValidation)
 
 	postUserRouter := routerUser.Methods(http.MethodPost).Subrouter()
-	postUserRouter.HandleFunc("/users", usersHandler.PostUser)
+	postUserRouter.HandleFunc("/users", usersHandler.Register)
 	postUserRouter.Use(usersHandler.MiddlewareUsersValidation)
 
 	//Set cors. Generally you wouldn't like to set cors to a "*". It is a wildcard and it will match any source.

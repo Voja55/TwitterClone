@@ -5,9 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 type UserRepoMongoDb struct {
@@ -56,6 +57,21 @@ func (u UserRepoMongoDb) AddUser(p *data.User) {
 	}
 
 	u.logger.Printf("Inserted user with _id: %v\n", result.InsertedID)
+}
+
+func (u UserRepoMongoDb) Register(p *data.RegisterUser) bool {
+	u.logger.Println("Registering user...")
+	coll := u.client.Database("myDB").Collection("users")
+	user, err := p.ToBson()
+
+	result, err := coll.InsertOne(context.TODO(), user)
+	if err != nil {
+		u.logger.Println(err)
+		return false
+	}
+
+	u.logger.Printf("Registered user with _id: %v\n", result.InsertedID)
+	return true
 }
 
 func (u UserRepoMongoDb) GetUser(id int) (data.User, error) {
