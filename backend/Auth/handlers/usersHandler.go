@@ -98,15 +98,24 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusOK)
 		rw.Header().Set("Content-Type", "aplication/json")
 		rw.Write(jsonUser)
+		return
 	}
+	rw.WriteHeader(http.StatusNotAcceptable)
+	rw.Write([]byte("406 - Not acceptable"))
 }
 
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
-	if u.userRepo.Register(user) == true {
-		return
+	if user.Username != "" && user.Password != "" && user.Role != "" {
+		if user.Role == "regular" || user.Role == "business" {
+			if u.userRepo.Register(user) == true {
+				rw.WriteHeader(http.StatusAccepted)
+				return
+			}
+		}
 	}
 	rw.WriteHeader(http.StatusNotAcceptable)
+	rw.Write([]byte("406 - Not acceptable"))
 }
 
 //Middleware to try and decode the incoming body. When decoded we run the validation on it just to check if everything is okay
