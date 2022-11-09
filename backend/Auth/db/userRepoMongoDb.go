@@ -93,3 +93,19 @@ func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User,
 
 	return result, nil
 }
+
+func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
+	u.logger.Printf("Getting user ", username)
+	var result data.User
+
+	coll := u.client.Database("myDB").Collection("users")
+	filter := bson.D{{"username", username}}
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		u.logger.Println(err)
+		return result, errors.New("couldn't find user")
+	}
+
+	return result, nil
+}
