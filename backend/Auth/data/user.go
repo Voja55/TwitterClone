@@ -2,20 +2,16 @@ package data
 
 import (
 	"encoding/json"
-	"go.mongodb.org/mongo-driver/bson"
 	"io"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type User struct {
-	ID        int    `json:"id"`
-	Username  string `json:"username" validate:"required"`
-	Password  string `json:"password" validate:"required"`
-	Role      ERole  `json:"role" validate:"required"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Gender    bool   `json:"gender"`
-	Age       int8   `json:"age"`
-	Address   string `json:"address"`
+	ID       int    `json:"id"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Role     ERole  `json:"role"`
 }
 
 type Users []*User

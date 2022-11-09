@@ -71,7 +71,7 @@ func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 
 func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
-	var logged LogUser
+	var logged data.User
 	err := decoder.Decode(&logged)
 
 	if err != nil {
@@ -102,7 +102,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 }
 
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
-	user := h.Context().Value(KeyUser{}).(*data.RegisterUser)
+	user := h.Context().Value(KeyUser{}).(*data.User)
 	if u.userRepo.Register(user) == true {
 		return
 	}
