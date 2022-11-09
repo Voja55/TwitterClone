@@ -107,7 +107,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
 	if user.Username != "" && user.Password != "" && user.Role != "" {
-		if user.Role == "regular" || user.Role == "business"{
+		if user.Role == "regular" || user.Role == "business" {
 			_, err := u.userRepo.GetUserByUsername(user.Username)
 			if err == nil {
 				rw.WriteHeader(http.StatusNotAcceptable)
