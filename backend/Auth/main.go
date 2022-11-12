@@ -11,26 +11,12 @@ import (
 	"syscall"
 	"time"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-
 	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
-	clientOptions := options.Client().
-		ApplyURI("mongodb+srv://soaproject:2YEa9zXdAa8iJjbB@soacluster.v3yc0kn.mongodb.net/?retryWrites=true&w=majority").
-		SetServerAPIOptions(serverAPIOptions)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	client, err := mongo.Connect(ctx, clientOptions)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	//Initialize the logger we are going to use, with prefix and datetime for every log
 	//As per 12 factor app the general place for app to log is the standard output.
 	//If you want to save the logs to a file run the app with the following command.
@@ -38,6 +24,9 @@ func main() {
 	//	go run . >> output.txt
 	//
 	logger := log.New(os.Stdout, "[auth-api] ", log.LstdFlags)
+
+	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	//Load .env file, generally used just to not fill up the environment with variables that are for a specific project
 	//Important notice is that .env file is not stored in version control (Git, Svn...) and every developer should create his .env file
@@ -54,16 +43,22 @@ func main() {
 		port = "8080"
 	}
 
-	//Initialize the repository that uses the actual database. If the in memory counter part is to be used,
-	//swap out the call to 'NewPostgreSql' to 'NewInMemory' and rerun the program.
-	userRepo, err := db.NewUserRepoDB(logger, client)
+	// NoSQL: Initialize Product Repository store
+	userRepo, err := db.NewUserRepoDB(timeoutContext, logger)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	defer userRepo.Disconnect(timeoutContext)
+
+	// NoSQL: Checking if the connection was established
+	userRepo.Ping()
 
 	if err != nil {
 		logger.Fatal(err)
 	}
 
 	//Initialize the handler and inject said logger
-	usersHandler := handlers.NewUsersHandler(logger, &userRepo)
+	usersHandler := handlers.NewUsersHandler(logger, userRepo)
 
 	//Initialize the router and add a middleware for all the requests
 	routerUser := mux.NewRouter()
@@ -116,7 +111,7 @@ func main() {
 	//After that the code will terminate.
 	sig := <-sigCh
 	logger.Println("Received terminate, graceful shutdown", sig)
-	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	timeoutContext, _ = context.WithTimeout(context.Background(), 30*time.Second)
 
 	//Try to shut down gracefully
 	if server.Shutdown(timeoutContext) != nil {

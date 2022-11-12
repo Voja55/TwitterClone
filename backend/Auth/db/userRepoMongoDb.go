@@ -5,7 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
+	"os"
+	"time"
 
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,14 +22,57 @@ type UserRepoMongoDb struct {
 	client *mongo.Client
 }
 
-// NewUserRepoDB Constructor
-func NewUserRepoDB(log *log.Logger, client *mongo.Client) (UserRepoMongoDb, error) {
-	return UserRepoMongoDb{log, client}, nil
+// NoSQL: Constructor which reads db configuration from environment
+func NewUserRepoDB(ctx context.Context, logger *log.Logger) (*UserRepoMongoDb, error) {
+	dburi := os.Getenv("MONGO_DB_URI")
+
+	client, err := mongo.NewClient(options.Client().ApplyURI(dburi))
+	if err != nil {
+		return nil, err
+	}
+
+	err = client.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UserRepoMongoDb{
+		client: client,
+		logger: logger,
+	}, nil
+}
+
+// Disconnect from database
+func (u *UserRepoMongoDb) Disconnect(ctx context.Context) error {
+	err := u.client.Disconnect(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Check database connection
+func (u *UserRepoMongoDb) Ping() {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Check connection -> if no error, connection is established
+	err := u.client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		u.logger.Println(err)
+	}
+
+	// Print available databases
+	databases, err := u.client.ListDatabaseNames(ctx, bson.M{})
+	if err != nil {
+		u.logger.Println(err)
+	}
+	fmt.Println(databases)
 }
 
 func (u UserRepoMongoDb) GetUsers() data.Users {
 	u.logger.Println("Getting users...")
-	coll := u.client.Database("myDB").Collection("users")
+	coll := u.getCollection()
 	filter := bson.D{}
 	cursor, err := coll.Find(context.TODO(), filter)
 	if err != nil {
@@ -49,7 +97,7 @@ func (u UserRepoMongoDb) GetUsers() data.Users {
 
 func (u UserRepoMongoDb) Register(p *data.User) bool {
 	u.logger.Println("Registering user...")
-	coll := u.client.Database("myDB").Collection("users")
+	coll := u.getCollection()
 	id := uuid.New()
 	p.ID = id.String()
 	user, err := p.ToBson()
@@ -67,7 +115,7 @@ func (u UserRepoMongoDb) GetUser(id int) (data.User, error) {
 	u.logger.Printf("Getting user ", id)
 	var result data.User
 
-	coll := u.client.Database("myDB").Collection("users")
+	coll := u.getCollection()
 	filter := bson.D{{"id", id}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 
@@ -83,8 +131,7 @@ func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User,
 	u.logger.Printf("Checking user...")
 	var result data.User
 
-	//u bazi ludilo mozga, treba zajednicka kolekcija da se napravi za sve tipove radi auth
-	coll := u.client.Database("myDB").Collection("users")
+	coll := u.getCollection()
 	filter := bson.D{{"username", username}, {"password", password}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 
@@ -100,7 +147,7 @@ func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
 	u.logger.Printf("Getting user ", username)
 	var result data.User
 
-	coll := u.client.Database("myDB").Collection("users")
+	coll := u.getCollection()
 	filter := bson.D{{"username", username}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 
@@ -110,4 +157,10 @@ func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
 	}
 
 	return result, nil
+}
+
+func (u *UserRepoMongoDb) getCollection() *mongo.Collection {
+	db := u.client.Database("myDB")
+	collection := db.Collection("users")
+	return collection
 }
