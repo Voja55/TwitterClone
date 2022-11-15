@@ -6,7 +6,6 @@ import (
 	"context"
 	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
@@ -30,10 +29,10 @@ func main() {
 	//Load .env file, generally used just to not fill up the environment with variables that are for a specific project
 	//Important notice is that .env file is not stored in version control (Git, Svn...) and every developer should create his .env file
 	//And fill it with variables for his system. After loading .env variables we can access them with os.Getenv()
-	e := godotenv.Load()
-	if e != nil {
-		logger.Fatal(e)
-	}
+	//e := godotenv.Load()
+	//if e != nil {
+	//	logger.Fatal(e)
+	//}
 
 	//Reading from environment, if not set we will default it to 8080.
 	//This allows flexibility in different environments (for eg. when running multiple docker api's and want to override the default port)
