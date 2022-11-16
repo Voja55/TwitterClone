@@ -4,10 +4,11 @@ import (
 	"Tweet/data"
 	"Tweet/db"
 	"context"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 type KeyUser struct{}
@@ -63,7 +64,16 @@ func (t *TweetsHandler) GetTweet(rw http.ResponseWriter, h *http.Request) {
 }
 
 func (t *TweetsHandler) CreateTweet(rw http.ResponseWriter, h *http.Request) {
-	//tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
+	tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
+	_, err := t.tweetRepo.CreateTweet(tweet)
+	if err == nil {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	if t.tweetRepo.CreateTweet(tweet) == true {
+		rw.WriteHeader(http.StatusAccepted)
+		return
+	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
 	rw.Write([]byte("406 - Not acceptable"))
