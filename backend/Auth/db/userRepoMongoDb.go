@@ -24,9 +24,10 @@ type UserRepoMongoDb struct {
 
 // NoSQL: Constructor which reads db configuration from environment
 func NewUserRepoDB(ctx context.Context, logger *log.Logger) (*UserRepoMongoDb, error) {
-	dburi := os.Getenv("MONGO_DB_URI")
+	uri := os.Getenv("MONGO_DB_URI")
+	logger.Println(uri)
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(dburi))
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		return nil, err
 	}

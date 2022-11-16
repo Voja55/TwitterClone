@@ -4,21 +4,22 @@ services:
 
   auth_service:
     image: auth_service
-    container_name: auth_service
     build:
       context: .
       dockerfile: ./Auth/Dockerfile
     restart: always
+    container_name: 'auth_service'
+    hostname: 'auth_service'
     ports:
       - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
-#    environment:
-#      SHIPPING_DB_HOST: ${SHIPPING_DB_HOST}
-#      SHIPPING_DB_PORT: ${SHIPPING_DB_PORT}
-#      SHIPPING_SERVICE_PORT: ${SHIPPING_SERVICE_PORT}
-#    depends_on:
-#      - shipping_db
+    environment:
+      - MONGO_DB_URI=mongodb://root:pass@mongo:27017
+      - PORT=8080
     networks:
       - network
+    depends_on:
+      auth_db:
+        condition: service_healthy
 
   tweet_service:
     image: tweet_service
@@ -26,39 +27,62 @@ services:
     build:
       context: .
       dockerfile: ./Tweet/Dockerfile
-    restart: always
+    restart: "no"
     ports:
       - ${TWEET_SERVICE_PORT}:${TWEET_SERVICE_PORT}
-#    environment:
-#      INVENTORY_DB_HOST: ${INVENTORY_DB_HOST}
-#      INVENTORY_DB_PORT: ${INVENTORY_DB_PORT}
-#      INVENTORY_DB_USER: ${INVENTORY_DB_USER}
-#      INVENTORY_DB_PASS: ${INVENTORY_DB_PASS}
-#      INVENTORY_DB_NAME: ${INVENTORY_DB_NAME}
-#      INVENTORY_SERVICE_PORT: ${INVENTORY_SERVICE_PORT}
-#    depends_on:
-#      - inventory_db
+    environment:
+      - MONGO_DB_URI:mongodb://root:pass@mongo:27017
+      - app_port=8081
     networks:
       - network
 
   auth_db:
     image: mongo
-    container_name: auth_db
-    restart: on-failure
-    networks:
-      - network
+    restart: always
+    ports:
+      - ${AUTH_DB_PORT}:${AUTH_DB_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_DATABASE: myDB
+    # Docker healtcheck - checks if database is "alive"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - mongo_store:/data/mongoAuth/mongo
 
-  tweet_db:
-    image: mongo
-    container_name: tweet_db
-    restart: on-failure
-#    environment:
-#      POSTGRES_USER: ${INVENTORY_DB_USER}
-#      POSTGRES_PASSWORD: ${INVENTORY_DB_PASS}
-#      POSTGRES_DB: ${INVENTORY_DB_NAME}
-    networks:
-      - network
+  # NoSQL: MognoExpress
+  mongo-express:
+    image: mongo-express
+    restart: always
+    environment:
+      # hostname of mongo databse
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=pass
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
+    depends_on:
+      - auth_db
+    ports:
+      - "8081:8081"
+    volumes:
+      - mong_express_data:/data/mongoAuth/mongoExpress
+
+#  tweet_db:
+#    image: mongo
+#    container_name: tweet_db
+#    restart: on-failure
+#    networks:
+#      - network
 
 networks:
   network:
     driver: bridge
+
+volumes:
+    mongo_store:
+    mong_express_data:
