@@ -7,8 +7,8 @@
     <list default="true" id="db80d8c7-a8b9-4267-a025-901ba1ead819" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Auth/db/userRepoMongoDb.go" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/db/userRepoMongoDb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Auth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tweet/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Tweet/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>

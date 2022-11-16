@@ -13,28 +13,28 @@ services:
     ports:
       - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     environment:
-      - MONGO_DB_URI=mongodb://root:pass@mongo:27017
-      - PORT=8080
+      - MONGO_DB_URI=mongodb://mongo:27017
+      - app_port=${AUTH_SERVICE_PORT}
     networks:
       - network
     depends_on:
       auth_db:
         condition: service_healthy
 
-  tweet_service:
-    image: tweet_service
-    container_name: tweet_service
-    build:
-      context: .
-      dockerfile: ./Tweet/Dockerfile
-    restart: "no"
-    ports:
-      - ${TWEET_SERVICE_PORT}:${TWEET_SERVICE_PORT}
-    environment:
-      - MONGO_DB_URI:mongodb://root:pass@mongo:27017
-      - app_port=8081
-    networks:
-      - network
+#  tweet_service:
+#    image: tweet_service
+#    container_name: tweet_service
+#    build:
+#      context: .
+#      dockerfile: ./Tweet/Dockerfile
+#    restart: "no"
+#    ports:
+#      - ${TWEET_SERVICE_PORT}:${TWEET_SERVICE_PORT}
+#    environment:
+#      - MONGO_DB_URI:mongodb://root:pass@mongo:27017
+#      - app_port=${TWEET_SERVICE_PORT}
+#    networks:
+#      - network
 
   auth_db:
     image: mongo
@@ -42,9 +42,9 @@ services:
     ports:
       - ${AUTH_DB_PORT}:${AUTH_DB_PORT}
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: pass
-      MONGO_INITDB_DATABASE: myDB
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_DATABASE: mongoDemo
     # Docker healtcheck - checks if database is "alive"
     healthcheck:
       test: echo 'db.runCommand("ping").ok'
@@ -53,24 +53,6 @@ services:
       retries: 10
     volumes:
       - mongo_store:/data/mongoAuth/mongo
-
-  # NoSQL: MognoExpress
-  mongo-express:
-    image: mongo-express
-    restart: always
-    environment:
-      # hostname of mongo databse
-      - ME_CONFIG_MONGODB_SERVER=mongo
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=pass
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=admin
-    depends_on:
-      - auth_db
-    ports:
-      - "8081:8081"
-    volumes:
-      - mong_express_data:/data/mongoAuth/mongoExpress
 
 #  tweet_db:
 #    image: mongo
