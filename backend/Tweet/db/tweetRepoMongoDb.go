@@ -132,9 +132,40 @@ func (t *TweetRepoMongoDb) CreateTweet(p *data.Tweet) (bool, error) {
 	return true, nil
 }
 
-func (t *TweetRepoMongoDb) LikeTweet(id string) bool {
-	//TODO implement me
-	panic("implement me")
+func (t *TweetRepoMongoDb) LikeTweet(id string, username string) bool {
+	tweet, err := t.GetTweet(id)
+	if err != nil {
+		return false
+	}
+	idx := -1
+	for i, user := range tweet.Likes {
+		if user == username {
+			idx = i
+			break
+		}
+	}
+	if idx == -1 {
+		tweet.Likes = append(tweet.Likes, username)
+	} else {
+		tweet.Likes[idx] = tweet.Likes[len(tweet.Likes) -1]
+		tweet.Likes[len(tweet.Likes) -1] = ""
+		tweet.Likes = tweet.Likes[:len(tweet.Likes) -1]
+	}
+
+	coll := t.getCollection()
+	filter := bson.D{{"id", id}}
+	newtweet, err := tweet.ToBson()
+	if err != nil {
+		t.logger.Println(err)
+		return false
+	}
+	_, err = coll.ReplaceOne(context.TODO(), filter, newtweet)
+	if err != nil {
+		t.logger.Println(err)
+		return false
+	}
+
+	return true
 }
 
 func (t *TweetRepoMongoDb) GetTweetsByUser(id int) (data.Tweets, error) {

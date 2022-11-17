@@ -103,6 +103,18 @@ func (t *TweetsHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler
 }
 
 func (t *TweetsHandler) LikeTweet(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	id := vars["id"]
+	username := vars["un"]
+	result := t.tweetRepo.LikeTweet(id, username)
+	if result == true {
+		writer.WriteHeader(http.StatusAccepted)
+		return
+	} else {
+		writer.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
 
 }
 

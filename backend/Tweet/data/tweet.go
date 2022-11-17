@@ -11,6 +11,7 @@ type Tweet struct {
 	Author  string `json:"author" validate:"required"`
 	Text    string `json:"text" validate:"required"`
 	Picture string `json:"picture"`
+	Likes	[]string `json:"likes"`
 	//Likes - lista i guess i onda kao usernamovi ljudi koji su lajkovali jer je username jedinstev a lepse je od samog id-a
 }
 
