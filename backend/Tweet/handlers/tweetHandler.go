@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 type KeyUser struct{}
@@ -35,13 +34,7 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 
 func (t *TweetsHandler) GetTweet(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
-	id, err := strconv.Atoi(vars["id"])
-
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusBadRequest)
-		t.logger.Println("Unable to convert from ascii to integer - input was :", vars["id"])
-		return
-	}
+	id := vars["id"]
 
 	tweet, er := t.tweetRepo.GetTweet(id)
 
@@ -51,7 +44,7 @@ func (t *TweetsHandler) GetTweet(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	err = tweet.ToJSON(rw)
+	err := tweet.ToJSON(rw)
 
 	if err != nil {
 		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
@@ -110,10 +103,6 @@ func (t *TweetsHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler
 }
 
 func (t *TweetsHandler) LikeTweet(writer http.ResponseWriter, request *http.Request) {
-
-}
-
-func (t *TweetsHandler) DislikeTweet(writer http.ResponseWriter, request *http.Request) {
 
 }
 

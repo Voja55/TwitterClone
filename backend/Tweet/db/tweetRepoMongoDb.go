@@ -100,7 +100,7 @@ func (t TweetRepoMongoDb) GetTweets() data.Tweets {
 	return results
 }
 
-func (t *TweetRepoMongoDb) GetTweet(id int) (data.Tweet, error) {
+func (t *TweetRepoMongoDb) GetTweet(id string) (data.Tweet, error) {
 	t.logger.Printf("Getting tweet ", id)
 	var result data.Tweet
 
@@ -116,7 +116,7 @@ func (t *TweetRepoMongoDb) GetTweet(id int) (data.Tweet, error) {
 	return result, nil
 }
 
-func (t *TweetRepoMongoDb) CreateTweet(p *data.Tweet) bool {
+func (t *TweetRepoMongoDb) CreateTweet(p *data.Tweet) (bool, error) {
 	t.logger.Println("Creating tweet...")
 	coll := t.getCollection()
 	id := uuid.New()
@@ -125,19 +125,14 @@ func (t *TweetRepoMongoDb) CreateTweet(p *data.Tweet) bool {
 	result, err := coll.InsertOne(context.TODO(), tweet)
 	if err != nil {
 		t.logger.Println(err)
-		return false
+		return false, err
 	}
 
 	t.logger.Printf("Created tweet with _id: %v\n", result.InsertedID)
-	return true
+	return true, nil
 }
 
-func (t *TweetRepoMongoDb) LikeTweet(id int) bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t *TweetRepoMongoDb) DislikeTweet(id int) bool {
+func (t *TweetRepoMongoDb) LikeTweet(id string) bool {
 	//TODO implement me
 	panic("implement me")
 }

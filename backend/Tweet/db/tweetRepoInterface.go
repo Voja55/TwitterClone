@@ -4,9 +4,8 @@ import "Tweet/data"
 
 type TweetRepo interface {
 	GetTweets() data.Tweets
-	GetTweet(id int) (data.Tweet, error)
+	GetTweet(id string) (data.Tweet, error)
 	CreateTweet(p *data.Tweet) (bool, error)
-	LikeTweet(id int) bool
-	DislikeTweet(id int) bool
+	LikeTweet(id string) bool
 	GetTweetsByUser(id int) (data.Tweets, error)
 }

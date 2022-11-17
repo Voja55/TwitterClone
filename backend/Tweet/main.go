@@ -62,19 +62,15 @@ func main() {
 	getTweetsRouter.HandleFunc("/tweets", tweetsHandler.GetTweets)
 
 	getTweetRouter := routerTweet.Methods(http.MethodGet).Subrouter()
-	getTweetRouter.HandleFunc("/tweet/{id:[0-9]+}", tweetsHandler.GetTweet)
+	getTweetRouter.HandleFunc("/tweet/{id}", tweetsHandler.GetTweet)
 
 	postTweetRouter := routerTweet.Methods(http.MethodPost).Subrouter()
 	postTweetRouter.HandleFunc("/tweet", tweetsHandler.CreateTweet)
 	postTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
 
 	likeTweetRouter := routerTweet.Methods(http.MethodPost).Subrouter()
-	likeTweetRouter.HandleFunc("/tweet/{id:[0-9]+}/like", tweetsHandler.LikeTweet)
+	likeTweetRouter.HandleFunc("/tweet/{id}/like", tweetsHandler.LikeTweet)
 	likeTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
-
-	dislikeTweetRouter := routerTweet.Methods(http.MethodPost).Subrouter()
-	dislikeTweetRouter.HandleFunc("/tweet/{id:[0-9]+}/dislike", tweetsHandler.DislikeTweet)
-	dislikeTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
 
 	getTweetsByUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getTweetsByUserRouter.HandleFunc("/user/tweets/{id:[0-9]+}", tweetsHandler.GetTweetsByUser)
