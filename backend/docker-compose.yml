@@ -19,42 +19,44 @@ services:
       auth_db:
         condition: service_healthy
 
-#  tweet_service:
-#    image: tweet_service
-#    container_name: tweet_service
-#    build:
-#      context: .
-#      dockerfile: ./Tweet/Dockerfile
-#    restart: "no"
-#    ports:
-#      - ${TWEET_SERVICE_PORT}:${TWEET_SERVICE_PORT}
-#    environment:
-#      - MONGO_DB_URI:mongodb://root:pass@mongo:27017
-#      - app_port=${TWEET_SERVICE_PORT}
-#    networks:
-#      - network
+  tweet_service:
+    image: tweet_service
+    build:
+      context: .
+      dockerfile: ./Tweet/Dockerfile
+    restart: always
+    container_name: 'tweet_service'
+    hostname: 'tweet_service'
+    ports:
+      - ${TWEET_SERVICE_PORT}:${TWEET_SERVICE_PORT}
+    environment:
+      - MONGO_DB_URI=mongodb://tweet_db:27017
+      - app_port=${TWEET_SERVICE_PORT}
+    depends_on:
+      tweet_db:
+        condition: service_healthy
 
   auth_db:
     image: mongo
     restart: always
-    ports:
-      - ${AUTH_DB_PORT}:${AUTH_DB_PORT}
     environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: pass
       MONGO_INITDB_DATABASE: mongoDemo
     # Docker healtcheck - checks if database is "alive"
     healthcheck:
       test: echo 'db.runCommand("ping").ok'
     volumes:
-      - mongo_store:/data/mongoAuth/mongo
+      - mongo_store:/data/mongoAuth
 
-#  tweet_db:
-#    image: mongo
-#    container_name: tweet_db
-#    restart: on-failure
-#    networks:
-#      - network
+  tweet_db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: mongoDemo
+    # Docker healtcheck - checks if database is "alive"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+    volumes:
+      - mongo_store:/data/mongoTweet
 
 volumes:
     mongo_store:

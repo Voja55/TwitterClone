@@ -52,10 +52,6 @@ func main() {
 	// NoSQL: Checking if the connection was established
 	userRepo.Ping()
 
-	if err != nil {
-		logger.Fatal(err)
-	}
-
 	//Initialize the handler and inject said logger
 	usersHandler := handlers.NewUsersHandler(logger, userRepo)
 

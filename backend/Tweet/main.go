@@ -1,4 +1,4 @@
-package Tweet
+package main
 
 import (
 	"Tweet/db"
@@ -21,7 +21,7 @@ func main() {
 	//
 	//	go run . >> output.txt
 	//
-	logger := log.New(os.Stdout, "[auth-api] ", log.LstdFlags)
+	logger := log.New(os.Stdout, "[tweet-api] ", log.LstdFlags)
 
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -38,7 +38,7 @@ func main() {
 	//This allows flexibility in different environments (for eg. when running multiple docker api's and want to override the default port)
 	port := os.Getenv("app_port")
 	if len(port) == 0 {
-		port = "8080"
+		port = "8081"
 	}
 
 	// NoSQL: Initialize Product Repository store
@@ -50,10 +50,6 @@ func main() {
 
 	// NoSQL: Checking if the connection was established
 	tweetRepo.Ping()
-
-	if err != nil {
-		logger.Fatal(err)
-	}
 
 	//Initialize the handler and inject said logger
 	tweetsHandler := handlers.NewTweetsHandler(logger, tweetRepo)
