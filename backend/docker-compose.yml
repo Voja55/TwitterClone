@@ -13,10 +13,8 @@ services:
     ports:
       - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     environment:
-      - MONGO_DB_URI=mongodb://mongo:27017
+      - MONGO_DB_URI=mongodb://auth_db:27017
       - app_port=${AUTH_SERVICE_PORT}
-    networks:
-      - network
     depends_on:
       auth_db:
         condition: service_healthy
@@ -48,9 +46,6 @@ services:
     # Docker healtcheck - checks if database is "alive"
     healthcheck:
       test: echo 'db.runCommand("ping").ok'
-      interval: 10s
-      timeout: 10s
-      retries: 10
     volumes:
       - mongo_store:/data/mongoAuth/mongo
 
@@ -60,10 +55,6 @@ services:
 #    restart: on-failure
 #    networks:
 #      - network
-
-networks:
-  network:
-    driver: bridge
 
 volumes:
     mongo_store:
