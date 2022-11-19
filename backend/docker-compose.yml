@@ -2,6 +2,20 @@ version: "3.8"
 
 services:
 
+  api_gateway:
+    build:
+      context: ./Api_gateway/
+      dockerfile: Dockerfile
+    container_name: api_gateway
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    depends_on:
+      tweet_service:
+        condition: service_healthy
+      auth_service:
+        condition: service_healthy
+
   auth_service:
     image: auth_service
     build:
@@ -15,6 +29,8 @@ services:
     environment:
       - MONGO_DB_URI=mongodb://auth_db:27017
       - app_port=${AUTH_SERVICE_PORT}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
     depends_on:
       auth_db:
         condition: service_healthy
@@ -32,6 +48,8 @@ services:
     environment:
       - MONGO_DB_URI=mongodb://tweet_db:27017
       - app_port=${TWEET_SERVICE_PORT}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
     depends_on:
       tweet_db:
         condition: service_healthy
