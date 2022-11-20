@@ -24,8 +24,6 @@ services:
     restart: always
     container_name: 'auth_service'
     hostname: 'auth_service'
-    ports:
-      - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     environment:
       - MONGO_DB_URI=mongodb://auth_db:27017
       - app_port=${AUTH_SERVICE_PORT}
@@ -43,8 +41,6 @@ services:
     restart: always
     container_name: 'tweet_service'
     hostname: 'tweet_service'
-    ports:
-      - ${TWEET_SERVICE_PORT}:${TWEET_SERVICE_PORT}
     environment:
       - MONGO_DB_URI=mongodb://tweet_db:27017
       - app_port=${TWEET_SERVICE_PORT}
