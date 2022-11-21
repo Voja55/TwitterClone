@@ -1,0 +1,14 @@
+Primer 1 - Microsoft
+	Key gen
+		openssl ecparam -out contoso.key -name prime256v1 -genkey
+	Certificate gen
+		openssl req -new -sha256 -key contoso.key -out contoso.csr
+		openssl x509 -req -sha256 -days 365 -in contoso.csr -signkey contoso.key -out contoso.crt
+Primer 2 - Microsoft
+	Key gen
+		$mypwd = ConvertTo-SecureString -String "{myPassword}" -Force -AsPlainText  ## Replace {myPassword}
+		Export-PfxCertificate -Cert $cert -FilePath "C:\Users\admin\Desktop\$certname.pfx" -Password $mypwd   ## Specify your preferred location	
+	Certificate gen
+		$certname = "{certificateName}"    ## Replace {certificateName}
+		$cert = New-SelfSignedCertificate -Subject "CN=$certname" -CertStoreLocation "Cert:\CurrentUser\My" -KeyExportPolicy Exportable -KeySpec Signature -KeyLength 2048 -KeyAlgorithm RSA -HashAlgorithm SHA256
+		Export-Certificate -Cert $cert -FilePath "C:\Users\admin\Desktop\$certname.cer"   ## Specify your preferred location
