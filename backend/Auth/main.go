@@ -3,6 +3,7 @@ package main
 import (
 	"12factorapp/db"
 	"12factorapp/handlers"
+	"12factorapp/middleware"
 	"context"
 	"log"
 	"net/http"
@@ -57,6 +58,7 @@ func main() {
 
 	//Initialize the router and add a middleware for all the requests
 	routerUser := mux.NewRouter()
+	routerUser.Use(middleware.Cors)
 	routerUser.Use(usersHandler.MiddlewareContentTypeSet)
 
 	getUsersRouter := routerUser.Methods(http.MethodGet).Subrouter()

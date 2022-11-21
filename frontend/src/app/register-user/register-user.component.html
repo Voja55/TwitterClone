@@ -1,6 +1,6 @@
 <div class="container">
     <div>
-            <form #userForm="ngForm">
+            <form #userForm="ngForm" (submit)="register()">
                   <div class="row">
                         <div class="col-md-10 offset-md-1">
                               <div class="form-group">
@@ -16,7 +16,6 @@
                         </div>
                   </div>
 
-
                   <div class="row">
                         <div class="col-md-10 offset-md-1">
                               <div class="form-group">
@@ -31,6 +30,21 @@
                               </div>
                         </div>
                   </div>
+
+                  <div class="row">
+                        <div class="col-md-10 offset-md-1">
+                              <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="text" class="form-control gray" id="email" required
+                                          [(ngModel)]="user.email" name="email"
+                                          #email="ngModel">
+                                    <div [hidden]="email.valid || !email.touched"
+                                          class="alert alert-danger">
+                                          Email is required
+                                    </div>       
+                              </div>
+                        </div>
+                    </div>
 
                   <div class="row">
                         <div class="col-md-10 offset-md-1">
