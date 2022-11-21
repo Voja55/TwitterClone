@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"os"
 	"time"
@@ -41,6 +42,11 @@ func NewUserRepoDB(ctx context.Context, logger *log.Logger) (*UserRepoMongoDb, e
 		client: client,
 		logger: logger,
 	}, nil
+}
+
+func (u *UserRepoMongoDb) CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
 
 // Disconnect from database
@@ -101,6 +107,9 @@ func (u UserRepoMongoDb) Register(p *data.User) bool {
 	coll := u.getCollection()
 	id := uuid.New()
 	p.ID = id.String()
+	hashedPass, err := p.HashPassword(p.Password)
+	p.Password = hashedPass
+
 	user, err := p.ToBson()
 	result, err := coll.InsertOne(context.TODO(), user)
 	if err != nil {
@@ -133,8 +142,14 @@ func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User,
 	var result data.User
 
 	coll := u.getCollection()
-	filter := bson.D{{"username", username}, {"password", password}}
+	//Finding user
+	filter := bson.D{{"username", username}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+	//Checking password
+	resultBool := u.CheckPasswordHash(password, result.Password)
+	if resultBool == false {
+		return result, errors.New("wrong username or password")
+	}
 
 	if err != nil {
 		u.logger.Println(err)

@@ -84,8 +84,8 @@ func main() {
 		Addr:         ":" + port,        // Addr optionally specifies the TCP address for the server to listen on, in the form "host:port". If empty, ":http" (port 80) is used.
 		Handler:      cors(routerUser),  // handler to invoke, http.DefaultServeMux if nil
 		IdleTimeout:  120 * time.Second, // IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled.
-		ReadTimeout:  1 * time.Second,   // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
-		WriteTimeout: 1 * time.Second,   // WriteTimeout is the maximum duration before timing out writes of the response.
+		ReadTimeout:  2 * time.Second,   // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
+		WriteTimeout: 2 * time.Second,   // WriteTimeout is the maximum duration before timing out writes of the response.
 	}
 
 	logger.Println("Server listening on port", port)
