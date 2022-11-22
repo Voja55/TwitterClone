@@ -100,6 +100,14 @@ func main() {
 		}
 	}()
 
+	//Pozivanje preko https-a
+	//go func() {
+	//	err := server.ListenAndServeTLS("certificates/group3.crt", "certificates/group3.key")
+	//	if err != nil {
+	//		logger.Fatal(err)
+	//	}
+	//}()
+
 	sigCh := make(chan os.Signal)
 	signal.Notify(sigCh, syscall.SIGINT)
 	signal.Notify(sigCh, syscall.SIGKILL)

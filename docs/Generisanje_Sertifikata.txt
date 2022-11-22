@@ -1,9 +1,13 @@
-Primer 1 - Microsoft
+Primer 1 - Microsoft (iskoriscen)
 	Key gen
 		openssl ecparam -out contoso.key -name prime256v1 -genkey
 	Certificate gen
 		openssl req -new -sha256 -key contoso.key -out contoso.csr
 		openssl x509 -req -sha256 -days 365 -in contoso.csr -signkey contoso.key -out contoso.crt
+
+
+
+
 Primer 2 - Microsoft
 	Key gen
 		$mypwd = ConvertTo-SecureString -String "{myPassword}" -Force -AsPlainText  ## Replace {myPassword}
