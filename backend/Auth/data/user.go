@@ -6,12 +6,13 @@ import (
 	"io"
 
 	"go.mongodb.org/mongo-driver/bson"
+
 )
 
 type User struct {
 	ID       string `json:"id"`
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Username string `json:"username" validate:"regexp=^(?=[a-z0-9._]{5\\,20}$)(?!.*[_.]{2})[^_.].*[^_.]$"`
+	Password string `json:"password" validate:"regexp=^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*._?&])[A-Za-z\d@$!%*._?&]{8\\,}$"`
 	Role     ERole  `json:"role"`
 }
 
