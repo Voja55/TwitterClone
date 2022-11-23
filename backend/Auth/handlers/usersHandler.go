@@ -5,11 +5,12 @@ import (
 	"12factorapp/db"
 	"context"
 	"encoding/json"
+	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
+	"time"
 )
 
 type KeyUser struct{}
@@ -23,6 +24,13 @@ type LogUser struct {
 	Username string
 	Password string
 }
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.StandardClaims
+}
+
+var jwtKey = []byte("secret_key")
 
 // NewUsersHandler Injecting the logger makes this code much more testable.
 func NewUsersHandler(l *log.Logger, ur db.UserRepo) *UsersHandler {
@@ -38,6 +46,39 @@ func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
 		u.logger.Println("Unable to convert to json :", err)
 		return
 	}
+
+	//cookie, err := h.Cookie("token")
+	//if err != nil {
+	//	if err == http.ErrNoCookie {
+	//		rw.WriteHeader(http.StatusUnauthorized)
+	//		return
+	//	}
+	//	rw.WriteHeader(http.StatusBadRequest)
+	//	return
+	//}
+	//tokenStr := cookie.Value
+	//claims := &Claims{}
+	//
+	//tkn, err := jwt.ParseWithClaims(tokenStr, claims,
+	//	func(t *jwt.Token) (interface{}, error) {
+	//		return jwtKey, nil
+	//	})
+	//
+	//if err != nil {
+	//	if err == jwt.ErrSignatureInvalid {
+	//		rw.WriteHeader(http.StatusUnauthorized)
+	//		return
+	//	}
+	//	rw.WriteHeader(http.StatusBadRequest)
+	//	return
+	//
+	//}
+	//
+	//if !tkn.Valid {
+	//	rw.WriteHeader(http.StatusUnauthorized)
+	//	return
+	//}
+
 }
 
 func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
@@ -91,6 +132,30 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+		expirationTime := time.Now().Add(time.Minute * 5)
+
+		claims := &Claims{
+			StandardClaims: jwt.StandardClaims{
+				ExpiresAt: expirationTime.Unix(),
+			},
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		tokenString, err := token.SignedString(jwtKey)
+
+		if err != nil {
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		http.SetCookie(rw,
+			&http.Cookie{
+				Name:    "token",
+				Value:   tokenString,
+				Expires: expirationTime,
+				Path:    "/",
+			})
+
 		var userResponse = make(map[string]string)
 		userResponse["username"] = user.Username
 		userResponse["role"] = string(user.Role)
@@ -100,6 +165,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 		rw.Write(jsonUser)
 		return
 	}
+
 	rw.WriteHeader(http.StatusNotAcceptable)
 	rw.Write([]byte("406 - Not acceptable"))
 }
