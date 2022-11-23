@@ -6,10 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="db80d8c7-a8b9-4267-a025-901ba1ead819" name="Changes" comment="resenje konflikta">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Api_Gateway/api_gateway.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Api_Gateway/api_gateway.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Auth/data/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/data/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Auth/db/userRepoMongoDb.go" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/db/userRepoMongoDb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Auth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/middleware/cors.go" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/middleware/cors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/login/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/login/login.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/register-business-user/register-business-user.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/register-business-user/register-business-user.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/register-user/register-user.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/register-user/register-user.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/user-service.service.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/user-service.service.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

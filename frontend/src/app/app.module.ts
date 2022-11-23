@@ -16,7 +16,7 @@ import { TweetPopupComponent } from './tweet-popup/tweet-popup.component';
 import { TweetComponent } from './tweet/tweet.component';
 import { BusinessAccountComponent } from './business-account/business-account.component';
 import { HttpClientModule } from '@angular/common/http';
-import { UserService } from './user-service.service';
+import { UserService } from './services/user-service.service';
 
 @NgModule({
   declarations: [

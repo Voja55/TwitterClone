@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user-service.service';
+import { UserService } from '../services/user-service.service';
 
 @Component({
   selector: 'app-register-business-user',
@@ -18,7 +18,7 @@ export class RegisterBusinessUserComponent implements OnInit {
   register() {
     let usernameField = document.getElementById("username") as HTMLInputElement;
     let passwordField = document.getElementById("password") as HTMLInputElement;
-    this.userService.regUser(usernameField.value, passwordField.value, "business").subscribe(data => {
+    this.userService.regUserAuth(usernameField.value, passwordField.value, "business").subscribe(data => {
       console.log(data);
     })
   }
