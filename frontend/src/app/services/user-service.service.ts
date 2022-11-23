@@ -14,9 +14,6 @@ export class UserService {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
         //'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
-        'Access-Control-Allow-Headers' : 'Content-Type, access-control-allow-methods,access-control-allow-origin,content-type, access-control-allow-headers',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-        'Access-Control-Allow-Origin' : 'http://localhost:4200/' 
       })
     };
   }

@@ -3,8 +3,8 @@ package main
 import (
 	"12factorapp/db"
 	"12factorapp/handlers"
-	"12factorapp/middleware"
 	"context"
+	gorillaHandlers "github.com/gorilla/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +12,6 @@ import (
 	"syscall"
 	"time"
 
-	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -58,7 +57,7 @@ func main() {
 
 	//Initialize the router and add a middleware for all the requests
 	routerUser := mux.NewRouter()
-	routerUser.Use(middleware.Cors)
+	//routerUser.Use(middleware.Cors)
 	routerUser.Use(usersHandler.MiddlewareContentTypeSet)
 
 	getUsersRouter := routerUser.Methods(http.MethodGet).Subrouter()
