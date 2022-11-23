@@ -100,6 +100,14 @@ func main() {
 		}
 	}()
 
+	//HTTPs:
+	//go func() {
+	//	err := server.ListenAndServeTLS("certificate/group3.crt", "certificate/group3.key")
+	//	if err != nil {
+	//		logger.Fatal(err)
+	//	}
+	//}()
+
 	sigCh := make(chan os.Signal)
 	signal.Notify(sigCh, syscall.SIGINT)
 	signal.Notify(sigCh, syscall.SIGKILL)
