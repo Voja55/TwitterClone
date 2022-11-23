@@ -90,6 +90,7 @@ func main() {
 
 	logger.Println("Server listening on port", port)
 
+	//Distribute all the connections to goroutines
 	go func() {
 		err := server.ListenAndServe()
 		if err != nil {
@@ -97,9 +98,6 @@ func main() {
 		}
 	}()
 
-	//certFile := "./Certificates/group3.crt"
-	//keyFile := "./Certificates/group3.key"
-	//Distribute all the connections to goroutines
 	//go func() {
 	//	err := server.ListenAndServeTLS("certificates/group3.crt", "certificates/group3.key")
 	//	if err != nil {
