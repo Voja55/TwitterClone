@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"golang.org/x/crypto/bcrypt"
 	"io"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -39,4 +40,9 @@ func (p *User) ToBson() (doc *bson.D, err error) {
 
 	err = bson.Unmarshal(data, &doc)
 	return
+}
+
+func (p *User) HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }
