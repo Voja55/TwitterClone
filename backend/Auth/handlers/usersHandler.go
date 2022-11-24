@@ -81,7 +81,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	u.logger.Println(logged)
-	if !isEmpty(logged.Username) && !isEmpty(logged.Password) {
+	if validation.ValidateUsername(logged.Username) && validation.ValidatePassword(logged.Password) {
 
 		user, err := u.userRepo.LoginUser(logged.Username, logged.Password)
 		if err != nil {
@@ -108,8 +108,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
 
-	if validation.ValidateUser(user) {
-		if user.Role == "regular" || user.Role == "business" {
+		if validation.ValidateUsername(user.Username) && validation.ValidatePassword(user.Password) && validation.ValidateRole(string(user.Role)) {
 			_, err := u.userRepo.GetUserByUsername(user.Username)
 			if err == nil {
 				rw.WriteHeader(http.StatusNotAcceptable)
@@ -120,7 +119,7 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 				return
 			}
 		}
-	}
+	
 	rw.WriteHeader(http.StatusNotAcceptable)
 	rw.Write([]byte("406 - Not acceptable"))
 }

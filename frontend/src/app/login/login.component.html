@@ -10,7 +10,7 @@
               <input type="text" class="form-control" id="username"
                 required
                 [(ngModel)]="user.username" name="name"
-                #name="ngModel">
+                #name="ngModel" pattern="^(?=[a-z0-9._]{5,25}$)(?!.*[_.]{2})[^_.].*[^_.]$">
               <div [hidden]="name.valid || !name.touched"
                 class="alert alert-danger">
                 Username is required
@@ -26,7 +26,7 @@
               <input type="password" class="form-control" id="password"
                 required
                 [(ngModel)]="user.password" name="password"
-                #password="ngModel">
+                #password="ngModel" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-,@$!._?&])[A-Za-z\d-,@$!._?&]{8,}$">
               <div [hidden]="password.valid || !password.touched"
                 class="alert alert-danger">
                 Password is required

@@ -1,23 +1,11 @@
 package validation
 
 import (
-	"12factorapp/data"
 	"strings"
 	"unicode"
 )
 
-func ValidateUser(u *data.User) bool {
-	if validatePassword(u.Password) != true {
-		return false
-	}
-	if validateUsername(u.Username) != true {
-		return false
-	}
-	//TODO validate role
-	return true
-}
-
-func validatePassword(pw string) bool {
+func ValidatePassword(pw string) bool {
 	if len(pw) < 8 {
 		return false
 	}
@@ -42,7 +30,7 @@ func validatePassword(pw string) bool {
 	return upper > 0 && lower > 0 && special > 0 && number > 0
 }
 
-func validateUsername(un string) bool {
+func ValidateUsername(un string) bool {
 	if len(un) < 5 || len(un) > 25 {
 		return false
 	}
@@ -57,4 +45,9 @@ func validateUsername(un string) bool {
 	}
 	if runes[len(runes)-1] == '_' || runes[len(runes)-1] == '.' {return false}
 	return true
+}
+
+func ValidateRole(r string) bool {
+	if r == "regular" || r == "buisiness" {return true} 
+	return false
 }
