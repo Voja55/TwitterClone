@@ -3,6 +3,7 @@ package handlers
 import (
 	"12factorapp/data"
 	"12factorapp/db"
+	"12factorapp/validation"
 	"context"
 	"encoding/json"
 	"log"
@@ -10,9 +11,6 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-
-	"gopkg.in/validator.v2"
-
 )
 
 type KeyUser struct{}
@@ -109,20 +107,15 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
-	err := validator.Validate(user);
-	if err != nil {
-		u.logger.Println()
-		rw.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if user.Username != "" && user.Password != "" && user.Role != "" {
+
+	if validation.ValidateUser(user) {
 		if user.Role == "regular" || user.Role == "business" {
 			_, err := u.userRepo.GetUserByUsername(user.Username)
 			if err == nil {
 				rw.WriteHeader(http.StatusNotAcceptable)
 				return
 			}
-			if u.userRepo.Register(user) == true {
+			if u.userRepo.Register(user) {
 				rw.WriteHeader(http.StatusAccepted)
 				return
 			}

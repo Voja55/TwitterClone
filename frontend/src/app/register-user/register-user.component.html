@@ -23,7 +23,7 @@
                                     <label for="password">Password</label>
                                     <input type="text" class="form-control gray" id="password" required
                                           [(ngModel)]="user.password" name="password"
-                                          #password="ngModel" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*._?&])[A-Za-z\d@$!%*._?&]{8,}$">
+                                          #password="ngModel" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-,@$!._?&])[A-Za-z\d-,@$!._?&]{8,}$">
                                     <div [hidden]="password.valid || !password.touched"
                                           class="alert alert-danger">
                                           Password is required, and must include one uppercase letter, one lower case letter, one special symbol and one number
