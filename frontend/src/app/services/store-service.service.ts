@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-// import jwt_decode, { JwtPayload } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -7,12 +7,8 @@ import { Injectable } from '@angular/core';
 export class StoreService{
 
   constructor() { 
-    if(sessionStorage.getItem('token')){
+    if(sessionStorage.getItem('jwt')){
       this.loginStatus = true;
-      this.token = sessionStorage.getItem('token');
-      // this.token = this.getDecodedAccessToken(t);
-      // this.role = this.token.role.authority;
-      // this.username = this.token.sub;
     }
     else {
       this.loginStatus = false;
@@ -23,23 +19,11 @@ export class StoreService{
 
   private token!: string | null;
 
+  private decodedToken : any;
+
   private role : string = "";
 
   private username : string = "";
-
-  setLoginStatus(status: boolean) {
-    this.loginStatus = status;
-  }
-
-  setToken(token: string) {
-    this.token = token;
-    sessionStorage.setItem('jwt', token)
-    this.loginStatus = true;
-    // this.role = token.role.authority;
-    // this.username = token.sub;
-    // console.log(this.username);
-    // console.log(this.role);
-  }
 
   getToken(): string | null {
     return this.token
@@ -49,8 +33,31 @@ export class StoreService{
     return this.loginStatus
   }
 
+  login(token: string) {
+    sessionStorage.setItem('jwt', token)
+    this.token = token;
+    
+    this.loginStatus = true;
+    this.decodedToken = this.getDecodedAccessToken(this.token);
+    this.role = this.decodedToken.role.authority;
+    this.username = this.decodedToken.sub;
+
+    console.log(this.username);
+    console.log(this.role);
+  }
+
+  logout() {
+    sessionStorage.removeItem('jwt')
+    this.loginStatus = false;
+    this.decodedToken = null;
+    this.role = ""
+    this.username = ""
+    this.token = null   
+  }
+
   getDecodedAccessToken(token: any): any {
     try {
+      console.log(jwt_decode(token))
       return jwt_decode(token);
     } catch(Error) {
       console.log(Error);
@@ -58,9 +65,3 @@ export class StoreService{
     }
   }
 }
-
-
-function jwt_decode(token: any): any {
-  console.log('jwt_decode not implemented.');
-}
-
