@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../services/user-service.service';
 
 @Component({
   selector: 'app-register-business-user',
@@ -7,13 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterBusinessUserComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
 
   user : any = new Object;
 
-  register() {}
+  register() {
+    let usernameField = document.getElementById("username") as HTMLInputElement;
+    let passwordField = document.getElementById("password") as HTMLInputElement;
+    this.userService.regUserAuth(usernameField.value, passwordField.value, "business").subscribe(data => {
+      console.log(data);
+    })
+  }
   
 }

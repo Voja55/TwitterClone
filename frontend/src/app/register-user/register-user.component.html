@@ -1,6 +1,6 @@
 <div class="container">
     <div>
-            <form #userForm="ngForm">
+            <form #userForm="ngForm" (submit)="register()">
                   <div class="row">
                         <div class="col-md-10 offset-md-1">
                               <div class="form-group">
@@ -16,12 +16,11 @@
                         </div>
                   </div>
 
-
                   <div class="row">
                         <div class="col-md-10 offset-md-1">
                               <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="text" class="form-control gray" id="password" required
+                                    <input type="password" class="form-control gray" id="password" required
                                           [(ngModel)]="user.password" name="password"
                                           #password="ngModel" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-,@$!._?&])[A-Za-z\d-,@$!._?&]{8,}$">
                                     <div [hidden]="password.valid || !password.touched"

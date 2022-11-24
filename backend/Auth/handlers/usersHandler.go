@@ -31,6 +31,10 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+type Jwt struct {
+	Token string `json:"jwt"`
+}
+
 var jwtKey = []byte("secret_key")
 
 // NewUsersHandler Injecting the logger makes this code much more testable.
@@ -124,7 +128,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	u.logger.Println(logged)
 	if validation.ValidateUsername(logged.Username) && validation.ValidatePassword(logged.Password) {
 
-		user, err := u.userRepo.LoginUser(logged.Username, logged.Password)
+		_, err := u.userRepo.LoginUser(logged.Username, logged.Password)
 		if err != nil {
 			http.Error(rw, "Unable to login", http.StatusInternalServerError)
 			u.logger.Println("Unable to login", err)
@@ -157,12 +161,11 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 				Path:    "/",
 			})
 
-		var userResponse = make(map[string]string)
-		userResponse["username"] = user.Username
-		userResponse["role"] = string(user.Role)
+		var userResponse Jwt
+		userResponse.Token = tokenString
 		jsonUser, err := json.Marshal(userResponse)
 		rw.WriteHeader(http.StatusOK)
-		rw.Header().Set("Content-Type", "aplication/json")
+		rw.Header().Set("Content-Type", "application/json")
 		rw.Write(jsonUser)
 		return
 	}

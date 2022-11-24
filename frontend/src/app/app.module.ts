@@ -15,6 +15,9 @@ import { TweetsComponent } from './tweets/tweets.component';
 import { TweetPopupComponent } from './tweet-popup/tweet-popup.component';
 import { TweetComponent } from './tweet/tweet.component';
 import { BusinessAccountComponent } from './business-account/business-account.component';
+import { HttpClientModule } from '@angular/common/http';
+import { UserService } from './services/user-service.service';
+import { LogOutComponent } from './log-out/log-out.component';
 
 @NgModule({
   declarations: [
@@ -28,15 +31,17 @@ import { BusinessAccountComponent } from './business-account/business-account.co
     TweetsComponent,
     TweetPopupComponent,
     TweetComponent,
-    BusinessAccountComponent
+    BusinessAccountComponent,
+    LogOutComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
