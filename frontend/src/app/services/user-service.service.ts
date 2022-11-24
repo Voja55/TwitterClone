@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { Jwt } from '../model/jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class UserService {
   }
 
   loginAuth(username: string, password: string, role: "regular"|"business"){
-    return this.client.post<unknown>(environment.apiUrl + "auth_service/login", {
+    return this.client.post<Jwt>(environment.apiUrl + "auth_service/login", {
       username: username,
       password: password,
       role: role

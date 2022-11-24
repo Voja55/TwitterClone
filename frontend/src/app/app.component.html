@@ -1,11 +1,11 @@
 <nav class="navbar navbar-expand-lg blue">
   <div class="nav mr-auto">
     <a class="navbar-brand twitter" href="#" routerLink="/" routerLinkActive="active">Twitter</a>
-    <a class="nav-item nav-link white" href="#" routerLink="/register" routerLinkActive="active" >Sign up</a>
-    <a class="nav-item nav-link white" href="#" routerLink="/login" routerLinkActive="active">Sign in</a>
-    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/logOut">Log out</a>
-    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/account">Account</a>
-    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/businessAccount">Business account</a>
+    <a class="nav-item nav-link white" href="#" routerLink="/register" routerLinkActive="active" *ngIf="store.getLoginStatus() == false">Sign up</a>
+    <a class="nav-item nav-link white" href="#" routerLink="/login" routerLinkActive="active" *ngIf="store.getLoginStatus() == false">Sign in</a>
+    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/logOut" *ngIf="store.getLoginStatus() == true">Log out</a>
+    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/account" *ngIf="store.getLoginStatus() == true">Account</a>
+    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/businessAccount" *ngIf="store.getLoginStatus() == true">Business account</a>
   </div>
 </nav>
 <router-outlet></router-outlet>
