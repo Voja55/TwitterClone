@@ -3,6 +3,7 @@ package handlers
 import (
 	"12factorapp/data"
 	"12factorapp/db"
+	"12factorapp/validation"
 	"context"
 	"encoding/json"
 	"github.com/golang-jwt/jwt"
@@ -121,7 +122,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	u.logger.Println(logged)
-	if !isEmpty(logged.Username) && !isEmpty(logged.Password) {
+	if validation.ValidateUsername(logged.Username) && validation.ValidatePassword(logged.Password) {
 
 		user, err := u.userRepo.LoginUser(logged.Username, logged.Password)
 		if err != nil {
@@ -172,19 +173,19 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
-	if user.Username != "" && user.Password != "" && user.Role != "" {
-		if user.Role == "regular" || user.Role == "business" {
+
+		if validation.ValidateUsername(user.Username) && validation.ValidatePassword(user.Password) && validation.ValidateRole(string(user.Role)) {
 			_, err := u.userRepo.GetUserByUsername(user.Username)
 			if err == nil {
 				rw.WriteHeader(http.StatusNotAcceptable)
 				return
 			}
-			if u.userRepo.Register(user) == true {
+			if u.userRepo.Register(user) {
 				rw.WriteHeader(http.StatusAccepted)
 				return
 			}
 		}
-	}
+	
 	rw.WriteHeader(http.StatusNotAcceptable)
 	rw.Write([]byte("406 - Not acceptable"))
 }
