@@ -180,10 +180,13 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 			_, err := u.userRepo.GetUserByUsername(user.Username)
 			if err == nil {
 				rw.WriteHeader(http.StatusNotAcceptable)
+				rw.Write([]byte("406 - Not acceptable"))
 				return
 			}
-			if u.userRepo.Register(user) == true {
+			success := u.userRepo.Register(user)
+			if success == true {
 				rw.WriteHeader(http.StatusAccepted)
+				rw.Write([]byte("202 - Accepted"))
 				return
 			}
 		}
