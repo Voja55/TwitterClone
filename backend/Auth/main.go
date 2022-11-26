@@ -90,20 +90,20 @@ func main() {
 
 	logger.Println("Server listening on port", port)
 	//Distribute all the connections to goroutines
-	go func() {
-		err := server.ListenAndServe()
-		if err != nil {
-			logger.Fatal(err)
-		}
-	}()
-
-	//HTTPs:
 	//go func() {
-	//	err := server.ListenAndServeTLS("certificate/group3.crt", "certificate/group3.key")
+	//	err := server.ListenAndServe()
 	//	if err != nil {
 	//		logger.Fatal(err)
 	//	}
 	//}()
+
+	//HTTPs:
+	go func() {
+		err := server.ListenAndServeTLS("certificates/group3.crt", "certificates/group3.key")
+		if err != nil {
+			logger.Fatal(err)
+		}
+	}()
 
 	sigCh := make(chan os.Signal)
 	signal.Notify(sigCh, syscall.SIGINT)

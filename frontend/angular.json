@@ -74,6 +74,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "twitter-clone:build",
+            "ssl": true
+          },
           "configurations": {
             "production": {
               "browserTarget": "twitter-clone:build:production"
