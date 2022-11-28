@@ -55,8 +55,13 @@ func (t *TweetsHandler) LikeTweet(writer http.ResponseWriter, request *http.Requ
 
 func (t *TweetsHandler) CreateTweet(rw http.ResponseWriter, h *http.Request) {
 	tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
+	if tweet.UserId.String() == "" || tweet.Text == "" {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
 	result, err := t.tweetRepo.CreateTweet(tweet)
-	if err == nil {
+	if err != nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
@@ -102,12 +107,4 @@ func (t *TweetsHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler
 
 func (t *TweetsHandler) GetTweetsByUser(writer http.ResponseWriter, request *http.Request) {
 
-}
-
-func isEmpty(data string) bool {
-	if len(data) <= 0 {
-		return true
-	} else {
-		return false
-	}
 }

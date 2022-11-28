@@ -60,10 +60,11 @@ func (sr *TweetRepoCassandraDb) CloseSession() {
 
 // Create tables
 func (sr *TweetRepoCassandraDb) CreateTables() {
+	sr.logger.Println("Creating tables...")
 	err := sr.session.Query(
 		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s 
 					(tweet_id UUID, user_id UUID, text text, 
-					PRIMARY KEY (tweet_id) `,
+					PRIMARY KEY (tweet_id)) `,
 			"tweet_by_user")).Exec()
 	if err != nil {
 		sr.logger.Println(err)
@@ -72,7 +73,7 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 	err = sr.session.Query(
 		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s 
 					(tweet_id UUID, user_id UUID, liked boolean, 
-					PRIMARY KEY (tweet_id, user_id)`,
+					PRIMARY KEY (tweet_id, user_id))`,
 			"user_by_tweet")).Exec()
 	if err != nil {
 		sr.logger.Println(err)
