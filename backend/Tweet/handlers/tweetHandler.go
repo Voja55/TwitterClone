@@ -22,8 +22,14 @@ func NewTweetsHandler(l *log.Logger, ur db.TweetRepo) *TweetsHandler {
 }
 
 func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
-	users := t.tweetRepo.GetTweets()
-	err := users.ToJSON(rw)
+	tweets, err := t.tweetRepo.GetTweets()
+	if err != nil {
+		http.Error(rw, "Problem with getting tweets from db", http.StatusInternalServerError)
+		t.logger.Println("Problem with getting tweets from db :", err)
+		return
+	}
+
+	err = tweets.ToJSON(rw)
 
 	if err != nil {
 		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
@@ -32,27 +38,19 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 	}
 }
 
-func (t *TweetsHandler) GetTweet(rw http.ResponseWriter, h *http.Request) {
-	vars := mux.Vars(h)
+func (t *TweetsHandler) LikeTweet(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
 	id := vars["id"]
-
-	tweet, er := t.tweetRepo.GetTweet(id)
-
-	if er != nil {
-		http.Error(rw, er.Error(), http.StatusNotFound)
-		t.logger.Println("Unable to find tweet.", er)
+	username := vars["un"]
+	result := t.tweetRepo.LikeTweet(id, username)
+	if result == true {
+		writer.WriteHeader(http.StatusAccepted)
+		return
+	} else {
+		writer.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
-	err := tweet.ToJSON(rw)
-
-	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		t.logger.Println("Unable to convert to json :", err)
-		return
-	}
-
-	rw.WriteHeader(http.StatusOK)
 }
 
 func (t *TweetsHandler) CreateTweet(rw http.ResponseWriter, h *http.Request) {
@@ -100,22 +98,6 @@ func (t *TweetsHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler
 
 		next.ServeHTTP(rw, h)
 	})
-}
-
-func (t *TweetsHandler) LikeTweet(writer http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	id := vars["id"]
-	username := vars["un"]
-	result := t.tweetRepo.LikeTweet(id, username)
-	if result == true {
-		writer.WriteHeader(http.StatusAccepted)
-		return
-	} else {
-		writer.WriteHeader(http.StatusNotAcceptable)
-		return
-	}
-
-
 }
 
 func (t *TweetsHandler) GetTweetsByUser(writer http.ResponseWriter, request *http.Request) {

@@ -2,17 +2,21 @@ package data
 
 import (
 	"encoding/json"
+	"github.com/gocql/gocql"
 	"go.mongodb.org/mongo-driver/bson"
 	"io"
 )
 
 type Tweet struct {
-	ID      string `json:"id"`
-	Author  string `json:"author" validate:"required"`
-	Text    string `json:"text" validate:"required"`
-	Picture string `json:"picture"`
-	Likes	[]string `json:"likes"`
-	//Likes - lista i guess i onda kao usernamovi ljudi koji su lajkovali jer je username jedinstev a lepse je od samog id-a
+	TweetId gocql.UUID
+	UserId  gocql.UUID
+	Text    string
+}
+
+type Like struct {
+	TweetId gocql.UUID
+	UserId  gocql.UUID
+	Liked   bool
 }
 
 type Tweets []*Tweet
