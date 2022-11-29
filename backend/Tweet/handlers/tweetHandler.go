@@ -67,7 +67,7 @@ func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.UserId, liked.Liked)
+	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.UserId)
 	if result == true {
 		rw.WriteHeader(http.StatusAccepted)
 		return

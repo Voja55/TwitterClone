@@ -137,12 +137,28 @@ func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {
 	return true, nil
 }
 
-func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID, liked bool) bool {
-	t.logger.Printf("Liking tweet with id:  %v\n", tweetId)
+func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID) bool {
+	t.logger.Printf("Liking fTweet with id:  %v\n", tweetId)
 	p := data.Like{}
 	p.TweetId = tweetId
 	p.UserId = userId
-	p.Liked = liked
+
+	//Checking if like or dislike
+	scanner := t.session.Query(`SELECT tweet_id, user_id, liked FROM user_by_tweet WHERE tweet_id = ? AND user_id = ?`,
+		p.TweetId, p.UserId).Iter().Scanner()
+
+	var fTweet data.Like
+	for scanner.Next() {
+		err := scanner.Scan(&fTweet.TweetId, &fTweet.UserId, &fTweet.Liked)
+		if err != nil {
+			t.logger.Println(err)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		t.logger.Println(err)
+	}
+
+	p.Liked = !fTweet.Liked
 
 	//Checking if like exists and modifying its value if it already exists
 	err := t.session.Query(
