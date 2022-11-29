@@ -10,7 +10,6 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -88,13 +87,8 @@ func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
 
 func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
-	id, err := strconv.Atoi(vars["id"])
+	id := vars["id"]
 
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusBadRequest)
-		u.logger.Println("Unable to convert from ascii to integer - input was :", vars["id"])
-		return
-	}
 
 	user, er := u.userRepo.GetUser(id)
 
@@ -104,7 +98,7 @@ func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 		return
 	}
 
-	err = user.ToJSON(rw)
+	err := user.ToJSON(rw)
 
 	if err != nil {
 		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
@@ -193,6 +187,42 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 
 	rw.WriteHeader(http.StatusNotAcceptable)
 	rw.Write([]byte("406 - Not acceptable"))
+}
+
+func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var data data.User
+	err := decoder.Decode(&data)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		u.logger.Println("Unable to convert to json :", err)
+		return
+	}
+	u.logger.Println(data)
+
+	user, err := u.userRepo.GetUser(data.ID)
+
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusNotFound)
+		u.logger.Println("Unable to find user.", err)
+		return
+	}
+	
+	if user.CCode != data.CCode {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	user.CCode = 0
+	if u.userRepo.UpdateUser(&user) == false {
+		rw.WriteHeader(http.StatusNotAcceptable)
+	} 
+	_, err = SendMail(user.Email, string(user.CCode))
+	if err != nil {
+		u.logger.Println("Faild to email", err)
+	}
+	rw.WriteHeader(http.StatusAccepted)
+
 }
 
 //Middleware to try and decode the incoming body. When decoded we run the validation on it just to check if everything is okay

@@ -60,6 +60,8 @@ services:
       test: echo 'db.runCommand("ping").ok'
     volumes:
       - mongo_store:/data/mongoAuth
+    ports:
+      - 27017:27017
 
   tweet_db:
     image: mongo

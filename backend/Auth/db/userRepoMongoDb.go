@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"time"
+	"math/rand"
 
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -109,6 +110,9 @@ func (u UserRepoMongoDb) Register(p *data.User) bool {
 	p.ID = id.String()
 	hashedPass, err := p.HashPassword(p.Password)
 	p.Password = hashedPass
+	rand.Seed(time.Now().UnixNano())
+	cCode := rand.Intn(999999-100001) + 100000
+	p.CCode = cCode
 
 	user, err := p.ToBson()
 	result, err := coll.InsertOne(context.TODO(), user)
@@ -121,7 +125,7 @@ func (u UserRepoMongoDb) Register(p *data.User) bool {
 	return true
 }
 
-func (u UserRepoMongoDb) GetUser(id int) (data.User, error) {
+func (u UserRepoMongoDb) GetUser(id string) (data.User, error) {
 	u.logger.Printf("Getting user ", id)
 	var result data.User
 
@@ -174,6 +178,19 @@ func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
 
 	return result, nil
 }
+
+func (u *UserRepoMongoDb) UpdateUser(user *data.User) (bool) {
+	coll := u.getCollection()
+	filter := bson.D{{"id", user.ID}}
+	
+	_, err := coll.ReplaceOne(context.TODO(), filter, user)
+	if err != nil {
+		u.logger.Println(err)
+		return false
+	}
+	return true
+	
+}  
 
 func (u *UserRepoMongoDb) getCollection() *mongo.Collection {
 	db := u.client.Database("myDB")
