@@ -4,7 +4,6 @@ import (
 	"Tweet/data"
 	"Tweet/db"
 	"context"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
@@ -38,16 +37,19 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 	}
 }
 
-func (t *TweetsHandler) LikeTweet(writer http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	id := vars["id"]
-	username := vars["un"]
-	result := t.tweetRepo.LikeTweet(id, username)
+func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
+	liked := h.Context().Value(KeyUser{}).(*data.Like)
+	if liked.UserId.String() == "" || liked.TweetId.String() == "" {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
+	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.UserId, liked.Liked)
 	if result == true {
-		writer.WriteHeader(http.StatusAccepted)
+		rw.WriteHeader(http.StatusAccepted)
 		return
 	} else {
-		writer.WriteHeader(http.StatusNotAcceptable)
+		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -81,6 +83,23 @@ func (t *TweetsHandler) CreateTweet(rw http.ResponseWriter, h *http.Request) {
 func (t *TweetsHandler) MiddlewareTweetsValidation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
 		tweet := &data.Tweet{}
+		err := tweet.FromJSON(h.Body)
+		if err != nil {
+			http.Error(rw, "Unable to decode json", http.StatusBadRequest)
+			t.logger.Println(err)
+			return
+		}
+
+		ctx := context.WithValue(h.Context(), KeyUser{}, tweet) //Ne znam sta je KeyUser{}
+		h = h.WithContext(ctx)
+
+		next.ServeHTTP(rw, h)
+	})
+}
+
+func (t *TweetsHandler) MiddlewareLikeValidation(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, h *http.Request) {
+		tweet := &data.Like{}
 		err := tweet.FromJSON(h.Body)
 		if err != nil {
 			http.Error(rw, "Unable to decode json", http.StatusBadRequest)

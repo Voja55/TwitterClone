@@ -65,8 +65,8 @@ func main() {
 	postTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
 
 	likeTweetRouter := routerTweet.Methods(http.MethodPost).Subrouter()
-	likeTweetRouter.HandleFunc("/tweets/like/{id}/{un}", tweetsHandler.LikeTweet)
-	//likeTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
+	likeTweetRouter.HandleFunc("/tweets/like", tweetsHandler.LikeTweet)
+	likeTweetRouter.Use(tweetsHandler.MiddlewareLikeValidation)
 
 	getTweetsByUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getTweetsByUserRouter.HandleFunc("/user/tweets/{id:[0-9]+}", tweetsHandler.GetTweetsByUser)

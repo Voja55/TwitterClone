@@ -116,39 +116,43 @@ func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {
 	return true, nil
 }
 
-func (t *TweetRepoCassandraDb) LikeTweet(id string, username string) bool {
-	//tweet, err := t.GetTweet(id)
-	//if err != nil {
-	//	return false
-	//}
-	//idx := -1
-	//for i, user := range tweet.Likes {
-	//	if user == username {
-	//		idx = i
-	//		break
-	//	}
-	//}
-	//if idx == -1 {
-	//	tweet.Likes = append(tweet.Likes, username)
-	//} else {
-	//	tweet.Likes[idx] = tweet.Likes[len(tweet.Likes)-1]
-	//	tweet.Likes[len(tweet.Likes)-1] = ""
-	//	tweet.Likes = tweet.Likes[:len(tweet.Likes)-1]
-	//}
-	//
-	//coll := t.getCollection()
-	//filter := bson.D{{"id", id}}
-	//newtweet, err := tweet.ToBson()
-	//if err != nil {
-	//	t.logger.Println(err)
-	//	return false
-	//}
-	//_, err = coll.ReplaceOne(context.TODO(), filter, newtweet)
-	//if err != nil {
-	//	t.logger.Println(err)
-	//	return false
-	//}
-	panic("implement me")
+func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID, liked bool) bool {
+	t.logger.Printf("Liking tweet with id:  %v\n", tweetId)
+	p := data.Like{}
+	p.TweetId = tweetId
+	p.UserId = userId
+	p.Liked = liked
+
+	//Checking if like exists and modifying its value if it already exists
+	err := t.session.Query(
+		`UPDATE user_by_tweet
+				SET liked = ?
+				WHERE tweet_id = ? AND user_id = ?`,
+		p.Liked, p.TweetId, p.UserId).Exec()
+
+	if err != nil {
+		t.logger.Println("Like doesnt exist")
+		t.logger.Println(err)
+	}
+
+	if err == nil {
+		t.logger.Printf("Liked tweet with id: %v\n", p.TweetId)
+		return true
+	}
+
+	//Creating new like
+	err = t.session.Query(
+		`INSERT INTO user_by_tweet (tweet_id, user_id, liked) 
+		VALUES (?, ?, ?)`,
+		p.TweetId, p.UserId, p.Liked).Exec()
+
+	if err != nil {
+		t.logger.Println("Error when creating new like")
+		t.logger.Println(err)
+		return false
+	}
+
+	t.logger.Printf("Liked tweet with id: %v\n", p.TweetId)
 	return true
 }
 
