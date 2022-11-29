@@ -37,6 +37,29 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 	}
 }
 
+func (t *TweetsHandler) GetLikes(rw http.ResponseWriter, h *http.Request) {
+	tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
+	if tweet.TweetId.String() == "" {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
+	likes, err := t.tweetRepo.GetLikes(tweet.TweetId)
+	if err != nil {
+		http.Error(rw, "Problem with getting likes from db", http.StatusInternalServerError)
+		t.logger.Println("Problem with getting likes from db :", err)
+		return
+	}
+
+	err = likes.ToJSON(rw)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		t.logger.Println("Unable to convert to json :", err)
+		return
+	}
+}
+
 func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
 	liked := h.Context().Value(KeyUser{}).(*data.Like)
 	if liked.UserId.String() == "" || liked.TweetId.String() == "" {

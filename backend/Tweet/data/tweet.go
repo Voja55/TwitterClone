@@ -20,6 +20,8 @@ type Like struct {
 
 type Tweets []*Tweet
 
+type Likes []*Like
+
 func (p *Tweets) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(p)
@@ -41,6 +43,11 @@ func (p *Like) FromJSON(r io.Reader) error {
 }
 
 func (p *Like) ToJSON(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(p)
+}
+
+func (p *Likes) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(p)
 }
