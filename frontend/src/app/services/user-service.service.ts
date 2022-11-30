@@ -21,7 +21,7 @@ export class UserService {
 
   regUserAuth(username: string, password: string, role: "regular"|"business") {
     return this.client.post<unknown>(environment.apiUrl + "auth_service/users", {
-      username: username,
+      username: "aaaaa",
       password: password,
       role: role
     }, this.options())

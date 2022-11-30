@@ -14,6 +14,6 @@ export class TweetComponent implements OnInit {
   }
 
   @Input()
-  tweet : any
+  tweet! : Tweet
 
 }

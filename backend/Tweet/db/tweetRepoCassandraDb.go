@@ -26,8 +26,6 @@ func NewTweetRepoDB(logger *log.Logger) (*TweetRepoCassandraDb, error) {
 		return nil, err
 	}
 	// Create 'student' keyspace
-	_ = session.Query(
-		fmt.Sprintf(`DROP KEYSPACE tweet;`)).Exec()
 	err = session.Query(
 		fmt.Sprintf(`CREATE KEYSPACE IF NOT EXISTS %s
 					WITH replication = {
