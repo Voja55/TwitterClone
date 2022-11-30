@@ -18,6 +18,7 @@ import { BusinessAccountComponent } from './business-account/business-account.co
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user-service.service';
 import { LogOutComponent } from './log-out/log-out.component';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { LogOutComponent } from './log-out/log-out.component';
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    RecaptchaModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

@@ -42,7 +42,16 @@
             <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid" (click)="login()">Login</button>
           </div>
         </div>
-            
+          
+        <div [hidden]="captcha">
+          <p>Success!</p>
+          <re-captcha (resolved)="resolved($event)" siteKey="6LdohEcjAAAAAHaQBWe4a3B05xMGZsiYmVGGug7F"></re-captcha>
+        </div>
+        <div [hidden]="!captcha">
+          <p> {{ email }} </p>
+        </div>
+
+
       </form>
     </div>
   
