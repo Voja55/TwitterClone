@@ -7,15 +7,15 @@ import (
 )
 
 type Tweet struct {
-	TweetId gocql.UUID
-	UserId  gocql.UUID
-	Text    string
+	TweetId  gocql.UUID `json:"tweetId"`
+	Username string     `json:"username"`
+	Text     string     `json:"text"`
 }
 
 type Like struct {
-	TweetId gocql.UUID
-	UserId  gocql.UUID
-	Liked   bool
+	TweetId  gocql.UUID `json:"tweetId"`
+	Username string     `json:"username"`
+	Liked    bool       `json:"liked"`
 }
 
 type Tweets []*Tweet

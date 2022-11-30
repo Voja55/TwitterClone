@@ -26,6 +26,8 @@ func NewTweetRepoDB(logger *log.Logger) (*TweetRepoCassandraDb, error) {
 		return nil, err
 	}
 	// Create 'student' keyspace
+	_ = session.Query(
+		fmt.Sprintf(`DROP KEYSPACE tweet;`)).Exec()
 	err = session.Query(
 		fmt.Sprintf(`CREATE KEYSPACE IF NOT EXISTS %s
 					WITH replication = {
@@ -63,7 +65,7 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 	sr.logger.Println("Creating tables...")
 	err := sr.session.Query(
 		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s 
-					(tweet_id UUID, user_id UUID, text text, 
+					(tweet_id UUID, username text, text text, 
 					PRIMARY KEY (tweet_id)) `,
 			"tweet_by_user")).Exec()
 	if err != nil {
@@ -72,8 +74,8 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 
 	err = sr.session.Query(
 		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s 
-					(tweet_id UUID, user_id UUID, liked boolean, 
-					PRIMARY KEY (tweet_id, user_id))`,
+					(tweet_id UUID, username text, liked boolean, 
+					PRIMARY KEY (tweet_id, username))`,
 			"user_by_tweet")).Exec()
 	if err != nil {
 		sr.logger.Println(err)
@@ -82,12 +84,12 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 
 func (t TweetRepoCassandraDb) GetTweets() (data.Tweets, error) {
 	t.logger.Println("Getting tweets...")
-	scanner := t.session.Query(`SELECT tweet_id, user_id, text FROM tweet_by_user`).Iter().Scanner()
+	scanner := t.session.Query(`SELECT tweet_id, username, text FROM tweet_by_user`).Iter().Scanner()
 
 	var results data.Tweets
 	for scanner.Next() {
 		var tweet data.Tweet
-		err := scanner.Scan(&tweet.TweetId, &tweet.UserId, &tweet.Text)
+		err := scanner.Scan(&tweet.TweetId, &tweet.Username, &tweet.Text)
 		if err != nil {
 			t.logger.Println(err)
 			return nil, err
@@ -103,12 +105,12 @@ func (t TweetRepoCassandraDb) GetTweets() (data.Tweets, error) {
 
 func (t *TweetRepoCassandraDb) GetLikes(id gocql.UUID) (data.Likes, error) {
 	t.logger.Printf("Getting likes for tweet%v\n", id)
-	scanner := t.session.Query(`SELECT tweet_id, user_id, liked FROM user_by_tweet WHERE tweet_id = ?`, id).Iter().Scanner()
+	scanner := t.session.Query(`SELECT tweet_id, username, liked FROM user_by_tweet WHERE tweet_id = ?`, id).Iter().Scanner()
 
 	var results data.Likes
 	for scanner.Next() {
 		var like data.Like
-		err := scanner.Scan(&like.TweetId, &like.UserId, &like.Liked)
+		err := scanner.Scan(&like.TweetId, &like.Username, &like.Liked)
 		if err != nil {
 			t.logger.Println(err)
 			return nil, err
@@ -126,9 +128,9 @@ func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {
 	t.logger.Println("Creating tweet...")
 	p.TweetId = gocql.TimeUUID()
 	err := t.session.Query(
-		`INSERT INTO tweet_by_user (tweet_id, user_id, text) 
+		`INSERT INTO tweet_by_user (tweet_id, username, text) 
 		VALUES (?, ?, ?)`,
-		p.TweetId, p.UserId, p.Text).Exec()
+		p.TweetId, p.Username, p.Text).Exec()
 	if err != nil {
 		t.logger.Println(err)
 		return false, err
@@ -137,19 +139,19 @@ func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {
 	return true, nil
 }
 
-func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID) bool {
+func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, username string) bool {
 	t.logger.Printf("Liking fTweet with id:  %v\n", tweetId)
 	p := data.Like{}
 	p.TweetId = tweetId
-	p.UserId = userId
+	p.Username = username
 
 	//Checking if like or dislike
-	scanner := t.session.Query(`SELECT tweet_id, user_id, liked FROM user_by_tweet WHERE tweet_id = ? AND user_id = ?`,
-		p.TweetId, p.UserId).Iter().Scanner()
+	scanner := t.session.Query(`SELECT tweet_id, username, liked FROM user_by_tweet WHERE tweet_id = ? AND username = ?`,
+		p.TweetId, p.Username).Iter().Scanner()
 
 	var fTweet data.Like
 	for scanner.Next() {
-		err := scanner.Scan(&fTweet.TweetId, &fTweet.UserId, &fTweet.Liked)
+		err := scanner.Scan(&fTweet.TweetId, &fTweet.Username, &fTweet.Liked)
 		if err != nil {
 			t.logger.Println(err)
 		}
@@ -164,8 +166,8 @@ func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID) 
 	err := t.session.Query(
 		`UPDATE user_by_tweet
 				SET liked = ?
-				WHERE tweet_id = ? AND user_id = ?`,
-		p.Liked, p.TweetId, p.UserId).Exec()
+				WHERE tweet_id = ? AND username = ?`,
+		p.Liked, p.TweetId, p.Username).Exec()
 
 	if err != nil {
 		t.logger.Println("Like doesnt exist")
@@ -179,9 +181,9 @@ func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID) 
 
 	//Creating new like
 	err = t.session.Query(
-		`INSERT INTO user_by_tweet (tweet_id, user_id, liked) 
+		`INSERT INTO user_by_tweet (tweet_id, username, liked) 
 		VALUES (?, ?, ?)`,
-		p.TweetId, p.UserId, p.Liked).Exec()
+		p.TweetId, p.Username, p.Liked).Exec()
 
 	if err != nil {
 		t.logger.Println("Error when creating new like")
@@ -193,7 +195,7 @@ func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, userId gocql.UUID) 
 	return true
 }
 
-func (t *TweetRepoCassandraDb) GetTweetsByUser(id int) (data.Tweets, error) {
+func (t *TweetRepoCassandraDb) GetTweetsByUser(username string) (data.Tweets, error) {
 	//TODO implement me
 	panic("implement me")
 }

@@ -1,12 +1,12 @@
 export class Tweet {
 
-    id!: number;
+    tweetId!: number;
     text!: string;
-    title!: string;
+    username!: string;
 
-    constructor(id: number, text: string, title: string) {
-        this.id = id;
+    constructor(tweetId: number, text: string, username: string) {
+        this.tweetId = tweetId;
         this.text = text;
-        this.title = title;
+        this.username = username;
     }
 }

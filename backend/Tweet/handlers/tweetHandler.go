@@ -62,12 +62,12 @@ func (t *TweetsHandler) GetLikes(rw http.ResponseWriter, h *http.Request) {
 
 func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
 	liked := h.Context().Value(KeyUser{}).(*data.Like)
-	if liked.UserId.String() == "" || liked.TweetId.String() == "" {
+	if liked.Username == "" || liked.TweetId.String() == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
-	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.UserId)
+	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.Username)
 	if result == true {
 		rw.WriteHeader(http.StatusAccepted)
 		return
@@ -80,7 +80,7 @@ func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
 
 func (t *TweetsHandler) CreateTweet(rw http.ResponseWriter, h *http.Request) {
 	tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
-	if tweet.UserId.String() == "" || tweet.Text == "" {
+	if tweet.Username == "" || tweet.Text == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
