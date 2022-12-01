@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"strconv"
 )
 
 type KeyUser struct{}
@@ -178,7 +179,11 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 				rw.Write([]byte("406 - Not acceptable"))
 				return
 			}
-			if u.userRepo.Register(user) == true {
+			if u.userRepo.Register(user) {
+				_, err = SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
+				if err != nil {
+					u.logger.Println("Faild to email", err)
+				}
 				rw.WriteHeader(http.StatusAccepted)
 				rw.Write([]byte("202 - Accepted"))
 				return
@@ -217,10 +222,6 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 	if u.userRepo.UpdateUser(&user) == false {
 		rw.WriteHeader(http.StatusNotAcceptable)
 	} 
-	_, err = SendMail(user.Email, string(user.CCode))
-	if err != nil {
-		u.logger.Println("Faild to email", err)
-	}
 	rw.WriteHeader(http.StatusAccepted)
 
 }
