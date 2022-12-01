@@ -31,6 +31,8 @@ COPY --from=builder /app/main .
 
 COPY --from=builder /app/certificates ./certificates/
 
+COPY --from=builder /app/validation ./blacklist/
+
 # Expose port 8000 to the outside world
 EXPOSE 8001
 
