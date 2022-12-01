@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { throws } from 'assert';
 import { StoreService } from '../services/store-service.service';
 import { UserService } from '../services/user-service.service';
 
@@ -9,10 +10,23 @@ import { UserService } from '../services/user-service.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private userService: UserService, private storeService:StoreService) { }
+  captcha: string;
+  email: string;
+
+
+  constructor(private userService: UserService, private storeService:StoreService) {
+    this.captcha = '';
+    this.email = 'Test';
+   }
 
   ngOnInit(): void {
   }
+
+  resolved(captchaResponse: string) {
+    this.captcha = captchaResponse;
+    console.log('resolved captcha with response: ' + this.captcha);
+  }
+
 
   user : any = new Object;
   submitted : boolean = false;
