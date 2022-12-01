@@ -52,6 +52,12 @@ func main() {
 	// NoSQL: Checking if the connection was established
 	userRepo.Ping()
 
+	//Google oAuth
+	err1 := handlers.OAuthGmailService()
+	if err1 != nil {
+		logger.Println("failed to authenticate" + err1.Error())
+	}
+
 	//Initialize the handler and inject said logger
 	usersHandler := handlers.NewUsersHandler(logger, userRepo)
 
