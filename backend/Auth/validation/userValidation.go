@@ -1,6 +1,9 @@
 package validation
 
 import (
+	"bufio"
+	"log"
+	"os"
 	"strings"
 	"unicode"
 )
@@ -13,18 +16,18 @@ func ValidatePassword(pw string) bool {
 	lower := 0
 	special := 0
 	number := 0
-	for _,c := range pw {
+	for _, c := range pw {
 		if unicode.IsUpper(c) {
-			upper ++
+			upper++
 		}
 		if unicode.IsLower(c) {
-			lower ++
+			lower++
 		}
 		if unicode.IsDigit(c) {
-			number ++
+			number++
 		}
 		if strings.ContainsRune("-,@$!._?&", c) {
-			special ++
+			special++
 		}
 	}
 	return upper > 0 && lower > 0 && special > 0 && number > 0
@@ -36,18 +39,44 @@ func ValidateUsername(un string) bool {
 	}
 	runes := []rune(un)
 	previousc := 'a'
-	for i,c := range runes {
-		if unicode.IsUpper(c) {return false}
-		if i == 0 && strings.ContainsRune("._", c) {return false}
-		if strings.ContainsRune(".", c) && strings.ContainsRune(".", previousc) {return false}
-		if strings.ContainsRune("_", c) && strings.ContainsRune("_", previousc) {return false}
+	for i, c := range runes {
+		if unicode.IsUpper(c) {
+			return false
+		}
+		if i == 0 && strings.ContainsRune("._", c) {
+			return false
+		}
+		if strings.ContainsRune(".", c) && strings.ContainsRune(".", previousc) {
+			return false
+		}
+		if strings.ContainsRune("_", c) && strings.ContainsRune("_", previousc) {
+			return false
+		}
 		previousc = c
 	}
-	if runes[len(runes)-1] == '_' || runes[len(runes)-1] == '.' {return false}
+	if runes[len(runes)-1] == '_' || runes[len(runes)-1] == '.' {
+		return false
+	}
 	return true
 }
 
 func ValidateRole(r string) bool {
-	if r == "regular" || r == "buisiness" {return true} 
+	if r == "regular" || r == "buisiness" {
+		return true
+	}
 	return false
+}
+
+func BlackList(pw string) bool {
+	f, err := os.Open("blacklist.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if pw == scanner.Text() {
+			return false
+		}
+	}
+	return true
 }

@@ -140,7 +140,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
 
-	if validation.ValidateUsername(user.Username) && validation.ValidatePassword(user.Password) && validation.ValidateRole(string(user.Role)) {
+	if validation.ValidateUsername(user.Username) && validation.ValidatePassword(user.Password) && validation.ValidateRole(string(user.Role)) && validation.BlackList(user.Password) {
 		_, err := u.userRepo.GetUserByUsername(user.Username)
 		if err == nil {
 			rw.WriteHeader(http.StatusNotAcceptable)
