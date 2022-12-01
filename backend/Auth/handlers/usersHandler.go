@@ -30,6 +30,7 @@ type LogUser struct {
 
 type Claims struct {
 	Username string `json:"username"`
+	Role     string `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -58,38 +59,6 @@ func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
 		u.logger.Println("Unable to convert to json :", err)
 		return
 	}
-
-	//cookie, err := h.Cookie("token")
-	//if err != nil {
-	//	if err == http.ErrNoCookie {
-	//		rw.WriteHeader(http.StatusUnauthorized)
-	//		return
-	//	}
-	//	rw.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
-	//tokenStr := cookie.Value
-	//claims := &Claims{}
-	//
-	//tkn, err := jwt.ParseWithClaims(tokenStr, claims,
-	//	func(t *jwt.Token) (interface{}, error) {
-	//		return jwtKey, nil
-	//	})
-	//
-	//if err != nil {
-	//	if err == jwt.ErrSignatureInvalid {
-	//		rw.WriteHeader(http.StatusUnauthorized)
-	//		return
-	//	}
-	//	rw.WriteHeader(http.StatusBadRequest)
-	//	return
-	//
-	//}
-	//
-	//if !tkn.Valid {
-	//	rw.WriteHeader(http.StatusUnauthorized)
-	//	return
-	//}
 
 }
 
@@ -142,6 +111,8 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 		expirationTime := time.Now().Add(time.Minute * 5)
 
 		claims := &Claims{
+			Username: logged.Username,
+			Role:     string(logged.Role),
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: expirationTime.Unix(),
 			},
@@ -154,14 +125,6 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-
-		http.SetCookie(rw,
-			&http.Cookie{
-				Name:    "token",
-				Value:   tokenString,
-				Expires: expirationTime,
-				Path:    "/",
-			})
 
 		var userResponse Jwt
 		userResponse.Token = tokenString
@@ -195,7 +158,13 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 				rw.Write([]byte("202 - Accepted"))
 				return
 			}
+
+		if u.userRepo.Register(user) == true {
+			rw.WriteHeader(http.StatusAccepted)
+			rw.Write([]byte("202 - Accepted"))
+			return
 		}
+	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
 	rw.Write([]byte("406 - Not acceptable"))

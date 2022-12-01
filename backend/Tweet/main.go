@@ -42,14 +42,13 @@ func main() {
 	}
 
 	// NoSQL: Initialize Product Repository store
-	tweetRepo, err := db.NewTweetRepoDB(timeoutContext, logger)
+	tweetRepo, err := db.NewTweetRepoDB(logger)
 	if err != nil {
 		logger.Fatal(err)
 	}
-	defer tweetRepo.Disconnect(timeoutContext)
+	defer tweetRepo.CloseSession()
 
-	// NoSQL: Checking if the connection was established
-	tweetRepo.Ping()
+	tweetRepo.CreateTables()
 
 	//Initialize the handler and inject said logger
 	tweetsHandler := handlers.NewTweetsHandler(logger, tweetRepo)
@@ -61,16 +60,17 @@ func main() {
 	getTweetsRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getTweetsRouter.HandleFunc("/tweets", tweetsHandler.GetTweets)
 
-	getTweetRouter := routerTweet.Methods(http.MethodGet).Subrouter()
-	getTweetRouter.HandleFunc("/tweet/{id}", tweetsHandler.GetTweet)
-
 	postTweetRouter := routerTweet.Methods(http.MethodPost).Subrouter()
-	postTweetRouter.HandleFunc("/tweet", tweetsHandler.CreateTweet)
+	postTweetRouter.HandleFunc("/tweets", tweetsHandler.CreateTweet)
 	postTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
 
 	likeTweetRouter := routerTweet.Methods(http.MethodPost).Subrouter()
-	likeTweetRouter.HandleFunc("/tweet/like/{id}/{un}", tweetsHandler.LikeTweet)
-	//likeTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
+	likeTweetRouter.HandleFunc("/tweets/likes", tweetsHandler.LikeTweet)
+	likeTweetRouter.Use(tweetsHandler.MiddlewareLikeValidation)
+
+	getLikeTweetRouter := routerTweet.Methods(http.MethodGet).Subrouter()
+	getLikeTweetRouter.HandleFunc("/tweets/likes", tweetsHandler.GetLikes)
+	getLikeTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
 
 	getTweetsByUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getTweetsByUserRouter.HandleFunc("/user/tweets/{id:[0-9]+}", tweetsHandler.GetTweetsByUser)
@@ -84,11 +84,11 @@ func main() {
 
 	//Initialize the server
 	server := http.Server{
-		Addr:         ":" + port,        // Addr optionally specifies the TCP address for the server to listen on, in the form "host:port". If empty, ":http" (port 80) is used.
-		Handler:      cors(routerTweet), // handler to invoke, http.DefaultServeMux if nil
-		IdleTimeout:  120 * time.Second, // IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled.
-		ReadTimeout:  1 * time.Second,   // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
-		WriteTimeout: 1 * time.Second,   // WriteTimeout is the maximum duration before timing out writes of the response.
+		Addr:         ":" + port,         // Addr optionally specifies the TCP address for the server to listen on, in the form "host:port". If empty, ":http" (port 80) is used.
+		Handler:      cors(routerTweet),  // handler to invoke, http.DefaultServeMux if nil
+		IdleTimeout:  1200 * time.Second, // IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled.
+		ReadTimeout:  1 * time.Second,    // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
+		WriteTimeout: 1 * time.Second,    // WriteTimeout is the maximum duration before timing out writes of the response.
 	}
 
 	logger.Println("Server listening on port", port)

@@ -42,7 +42,7 @@ services:
     container_name: 'tweet_service'
     hostname: 'tweet_service'
     environment:
-      - MONGO_DB_URI=mongodb://tweet_db:27017
+      - CASS_DB_URI=tweet_db:9042
       - app_port=${TWEET_SERVICE_PORT}
     healthcheck:
       test: echo 'db.runCommand("ping").ok'
@@ -64,16 +64,16 @@ services:
       - 27017:27017
 
   tweet_db:
-    image: mongo
+    image: cassandra
     restart: always
-    environment:
-      MONGO_INITDB_DATABASE: mongoDemo
     # Docker healtcheck - checks if database is "alive"
     healthcheck:
-      test: echo 'db.runCommand("ping").ok'
+      test: [ "CMD-SHELL", "cqlsh -e 'describe cluster'" ]
+      interval: 15s
+      timeout: 5s
+      retries: 15
     volumes:
       - mongo_store:/data/mongoTweet
 
 volumes:
     mongo_store:
-    mong_express_data:

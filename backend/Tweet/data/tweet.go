@@ -2,20 +2,25 @@ package data
 
 import (
 	"encoding/json"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/gocql/gocql"
 	"io"
 )
 
 type Tweet struct {
-	ID      string `json:"id"`
-	Author  string `json:"author" validate:"required"`
-	Text    string `json:"text" validate:"required"`
-	Picture string `json:"picture"`
-	Likes	[]string `json:"likes"`
-	//Likes - lista i guess i onda kao usernamovi ljudi koji su lajkovali jer je username jedinstev a lepse je od samog id-a
+	TweetId gocql.UUID
+	UserId  gocql.UUID
+	Text    string
+}
+
+type Like struct {
+	TweetId gocql.UUID
+	UserId  gocql.UUID
+	Liked   bool
 }
 
 type Tweets []*Tweet
+
+type Likes []*Like
 
 func (p *Tweets) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
@@ -32,12 +37,17 @@ func (p *Tweet) FromJSON(r io.Reader) error {
 	return d.Decode(p)
 }
 
-func (p *Tweet) ToBson() (doc *bson.D, err error) {
-	data, err := bson.Marshal(p)
-	if err != nil {
-		return
-	}
+func (p *Like) FromJSON(r io.Reader) error {
+	d := json.NewDecoder(r)
+	return d.Decode(p)
+}
 
-	err = bson.Unmarshal(data, &doc)
-	return
+func (p *Like) ToJSON(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(p)
+}
+
+func (p *Likes) ToJSON(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(p)
 }
