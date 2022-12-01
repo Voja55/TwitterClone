@@ -101,25 +101,29 @@ func (t TweetRepoCassandraDb) GetTweets() (data.Tweets, error) {
 	return results, nil
 }
 
-func (t *TweetRepoCassandraDb) GetLikes(id gocql.UUID) (data.Likes, error) {
+func (t *TweetRepoCassandraDb) GetLikes(id gocql.UUID) (int, error) {
 	t.logger.Printf("Getting likes for tweet%v\n", id)
 	scanner := t.session.Query(`SELECT tweet_id, username, liked FROM user_by_tweet WHERE tweet_id = ?`, id).Iter().Scanner()
 
-	var results data.Likes
+	result := 0
 	for scanner.Next() {
 		var like data.Like
 		err := scanner.Scan(&like.TweetId, &like.Username, &like.Liked)
+		t.logger.Printf("tweetId: %v\n username: %v\n liked: %v\n", like.TweetId, like.Username, like.Liked)
 		if err != nil {
 			t.logger.Println(err)
-			return nil, err
+			return -1, err
 		}
-		results = append(results, &like)
+
+		if like.Liked == true {
+			result = result + 1
+		}
 	}
 	if err := scanner.Err(); err != nil {
 		t.logger.Println(err)
-		return nil, err
+		return -1, err
 	}
-	return results, nil
+	return result, nil
 }
 
 func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {

@@ -13,6 +13,7 @@ export class StoreService{
       this.decodedToken = this.getDecodedAccessToken(t)
       this.role = this.decodedToken.role;   
       this.username = this.decodedToken.username;
+      console.log(this.decodedToken)
       console.log(this.username)
       console.log(this.role)
     }
@@ -49,8 +50,8 @@ export class StoreService{
     
     this.loginStatus = true;
     this.decodedToken = this.getDecodedAccessToken(this.token);
-    this.role = this.decodedToken.role.authority;
-    this.username = this.decodedToken.sub;
+    this.role = this.decodedToken.role;
+    this.username = this.decodedToken.username;
 
     console.log(this.username);
     console.log(this.role);
