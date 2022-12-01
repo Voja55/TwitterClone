@@ -76,6 +76,12 @@ func main() {
 	confirmUserRouter := routerUser.Methods(http.MethodPost).Subrouter()
 	confirmUserRouter.HandleFunc("/confirm", usersHandler.Confirm)
 
+	requestResetPasswordRouter := routerUser.Methods(http.MethodPost).Subrouter()
+	requestResetPasswordRouter.HandleFunc("/requestreset", usersHandler.RequestResetPassword)
+
+	resetPasswordRouter := routerUser.Methods(http.MethodPost).Subrouter()
+	resetPasswordRouter.HandleFunc("/reset", usersHandler.ResetPassword)
+
 	//Set cors. Generally you wouldn't like to set cors to a "*". It is a wildcard and it will match any source.
 	//Normally you would set this to a set of ip's you want this api to serve. If you have an associated frontend app
 	//you would put the ip of the server where the frontend is running. The only time you don't need cors is when you

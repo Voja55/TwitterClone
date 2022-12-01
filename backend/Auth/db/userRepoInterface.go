@@ -9,4 +9,5 @@ type UserRepo interface {
 	Register(p *data.User) bool
 	GetUserByUsername(username string) (data.User, error)
 	UpdateUser(u *data.User) bool
+	GetUserByEmail(email string) (data.User, error)
 }

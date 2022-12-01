@@ -5,13 +5,15 @@ import (
 	"12factorapp/db"
 	"12factorapp/validation"
 	"context"
+	"encoding/base64"
 	"encoding/json"
-	"github.com/golang-jwt/jwt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"time"
 	"strconv"
+	"time"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/mux"
 )
 
 type KeyUser struct{}
@@ -33,6 +35,11 @@ type Claims struct {
 
 type Jwt struct {
 	Token string `json:"jwt"`
+}
+
+type PasswordReset struct {
+	Token string `json:"token"`
+	Password string `json:"password"`
 }
 
 var jwtKey = []byte("secret_key")
@@ -224,6 +231,76 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 	} 
 	rw.WriteHeader(http.StatusAccepted)
 
+}
+
+func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var data data.User
+	err := decoder.Decode(&data)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		u.logger.Println("Unable to convert to json :", err)
+		return
+	}
+	u.logger.Println(data)
+
+	user, err := u.userRepo.GetUserByEmail(data.Email)
+
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusNotFound)
+		u.logger.Println("Unable to find user.", err)
+		return
+	}
+	//TODO zameni base64 sa nekom vrstom sifrovanja
+	//TODO Link ka frontu da bude env promenljiva
+	encoded := base64.StdEncoding.EncodeToString([]byte(user.Email))
+	_, err1 := SendMail(user.Email, "Reset password", "https://localhost:4200/resetPass?id=" + encoded)
+	if err1 != nil {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	rw.WriteHeader(http.StatusAccepted)
+}
+
+func (u *UsersHandler) ResetPassword(rw http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var data PasswordReset
+	err := decoder.Decode(&data)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		u.logger.Println("Unable to convert to json :", err)
+		return
+	}
+	u.logger.Println(data)
+
+	decoded, err := base64.StdEncoding.DecodeString(data.Token)
+	if err != nil {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		u.logger.Println("Unable to decode token", err)
+		return
+	}
+
+	user, err := u.userRepo.GetUserByEmail(string(decoded))
+
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusNotFound)
+		u.logger.Println("Unable to find user.", err)
+		return
+	}
+
+	hashedPass, err := user.HashPassword(data.Password)
+	if err != nil {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	user.Password = hashedPass
+	if !u.userRepo.UpdateUser(&user) {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	rw.WriteHeader(http.StatusAccepted)
 }
 
 //Middleware to try and decode the incoming body. When decoded we run the validation on it just to check if everything is okay

@@ -179,6 +179,22 @@ func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
 	return result, nil
 }
 
+func (u UserRepoMongoDb) GetUserByEmail(email string) (data.User, error) {
+	u.logger.Printf("Getting user ", email)
+	var result data.User
+
+	coll := u.getCollection()
+	filter := bson.D{{"email", email}}
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		u.logger.Println(err)
+		return result, errors.New("couldn't find user")
+	}
+
+	return result, nil
+}
+
 func (u *UserRepoMongoDb) UpdateUser(user *data.User) (bool) {
 	coll := u.getCollection()
 	filter := bson.D{{"id", user.ID}}

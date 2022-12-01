@@ -3,7 +3,7 @@ package handlers
 import (
 	gomail "gopkg.in/gomail.v2"
 )
-
+//TODO Sacuvati mail i pass u env
 func SendMail(to string, subject string, body string) (bool, error) {
 	msg := gomail.NewMessage()
 	msg.SetHeader("From", "teamthreemail@gmail.com")

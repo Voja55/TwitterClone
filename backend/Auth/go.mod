@@ -13,6 +13,7 @@ require (
 
 require (
 	github.com/felixge/httpsnoop v1.0.1 // indirect
+	github.com/golang-jwt/jwe v0.0.0-20220815104040-b2647e820b90 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
