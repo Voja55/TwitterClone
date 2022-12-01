@@ -44,12 +44,16 @@
         </div>
           
         <div [hidden]="captcha">
-          <p>Success!</p>
+          <div class="col-md-10 offset-md-4">
+          <!-- <p>Success!</p> -->
           <re-captcha (resolved)="resolved($event)" siteKey="6LdohEcjAAAAAHaQBWe4a3B05xMGZsiYmVGGug7F"></re-captcha>
         </div>
+      </div>
         <div [hidden]="!captcha">
+          <div class="col-md-10 offset-md-4">
           <p> {{ email }} </p>
         </div>
+      </div>
 
 
       </form>

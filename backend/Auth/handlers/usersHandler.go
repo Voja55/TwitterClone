@@ -97,7 +97,7 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	u.logger.Println(logged)
 	if validation.ValidateUsername(logged.Username) && validation.ValidatePassword(logged.Password) {
 
-		_, err := u.userRepo.LoginUser(logged.Username, logged.Password)
+		logged, err := u.userRepo.LoginUser(logged.Username, logged.Password)
 		if err != nil {
 			http.Error(rw, "Unable to login", http.StatusInternalServerError)
 			u.logger.Println("Unable to login", err)
