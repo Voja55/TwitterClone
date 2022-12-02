@@ -34,10 +34,15 @@ export class LoginComponent implements OnInit {
   login() {
     let usernameField = document.getElementById("username") as HTMLInputElement;
     let passwordField = document.getElementById("password") as HTMLInputElement;
-    this.userService.loginAuth(usernameField.value, passwordField.value, "regular").subscribe(data => {
-      console.log(data);
-      this.storeService.login(data.jwt)
-    })
+    if (this.captcha != '') {
+      this.userService.loginAuth(usernameField.value, passwordField.value, "regular").subscribe(data => {
+        console.log(data);
+        this.storeService.login(data.jwt)
+      })
+    } else {
+      console.log("captcha not passed")
+    }
+
   }
 
 }
