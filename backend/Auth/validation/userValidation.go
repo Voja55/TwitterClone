@@ -68,7 +68,7 @@ func ValidateRole(r string) bool {
 }
 
 func BlackList(pw string) bool {
-	f, err := os.Open("blacklist.txt")
+	f, err := os.Open("blacklist/blacklist.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
