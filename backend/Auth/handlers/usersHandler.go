@@ -142,23 +142,22 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 	user := h.Context().Value(KeyUser{}).(*data.User)
 
-		if validation.ValidateUsername(user.Username) && validation.ValidatePassword(user.Password) && validation.ValidateRole(string(user.Role)) {
-			_, err := u.userRepo.GetUserByUsername(user.Username)
-			if err == nil {
-				rw.WriteHeader(http.StatusNotAcceptable)
-				rw.Write([]byte("406 - Not acceptable"))
-				return
+	if validation.ValidateUsername(user.Username) && validation.ValidatePassword(user.Password) && validation.ValidateRole(string(user.Role)) && validation.BlackList(user.Password) {
+		_, err := u.userRepo.GetUserByUsername(user.Username)
+		if err == nil {
+			rw.WriteHeader(http.StatusNotAcceptable)
+			rw.Write([]byte("406 - Not acceptable"))
+			return
+		}
+		if u.userRepo.Register(user) {
+			_, err = SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
+			if err != nil {
+				u.logger.Println("Faild to email", err)
 			}
-			if u.userRepo.Register(user) {
-				_, err = SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
-				if err != nil {
-					u.logger.Println("Faild to email", err)
-				}
-				rw.WriteHeader(http.StatusAccepted)
-				rw.Write([]byte("202 - Accepted"))
-				return
-			}
-
+			rw.WriteHeader(http.StatusAccepted)
+			rw.Write([]byte("202 - Accepted"))
+			return
+		}
 		if u.userRepo.Register(user) == true {
 			rw.WriteHeader(http.StatusAccepted)
 			rw.Write([]byte("202 - Accepted"))
