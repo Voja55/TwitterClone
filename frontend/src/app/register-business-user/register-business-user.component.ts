@@ -18,7 +18,8 @@ export class RegisterBusinessUserComponent implements OnInit {
   register() {
     let usernameField = document.getElementById("username") as HTMLInputElement;
     let passwordField = document.getElementById("password") as HTMLInputElement;
-    this.userService.regUserAuth(usernameField.value, passwordField.value, "business").subscribe(data => {
+    let emailField = document.getElementById("email") as HTMLInputElement;
+    this.userService.regUserAuth(usernameField.value, passwordField.value, emailField.value, "business").subscribe(data => {
       console.log(data);
     })
   }
