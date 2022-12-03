@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { throws } from 'assert';
 import { StoreService } from '../services/store-service.service';
 import { UserService } from '../services/user-service.service';
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   email: string;
 
 
-  constructor(private userService: UserService, private storeService:StoreService) {
+  constructor(private userService: UserService, public storeService:StoreService, private router : Router) {
     this.captcha = '';
     this.email = 'Test';
    }
@@ -25,11 +26,15 @@ export class LoginComponent implements OnInit {
   resolved(captchaResponse: string) {
     this.captcha = captchaResponse;
     console.log('resolved captcha with response: ' + this.captcha);
+    if (captchaResponse != '') {
+      this.captchaValid = true
+    }
   }
 
 
   user : any = new Object;
   submitted : boolean = false;
+  captchaValid : boolean = false;
 
   login() {
     let usernameField = document.getElementById("username") as HTMLInputElement;
@@ -38,6 +43,7 @@ export class LoginComponent implements OnInit {
       this.userService.loginAuth(usernameField.value, passwordField.value, "regular").subscribe(data => {
         console.log(data);
         this.storeService.login(data.jwt)
+        this.router.navigateByUrl("/");
       })
     } else {
       console.log("captcha not passed")

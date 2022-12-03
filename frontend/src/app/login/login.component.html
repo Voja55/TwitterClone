@@ -39,13 +39,15 @@
 
         <div class="row">      
           <div class="col-md-10 offset-md-1">
-            <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid" (click)="login()">Login</button>
+            <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid || !captchaValid" (click)="login()">Login</button>
           </div>
         </div>
           
+        <br/>
+
         <div [hidden]="captcha">
           <div class="col-md-10 offset-md-4">
-          <!-- <p>Success!</p> -->
+          <p *ngIf="storeService.getLoginStatus() == true">Success!</p>
           <re-captcha (resolved)="resolved($event)" siteKey="6LdohEcjAAAAAHaQBWe4a3B05xMGZsiYmVGGug7F"></re-captcha>
         </div>
       </div>
