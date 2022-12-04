@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Tweet } from '../model/tweet';
 import { TweetLikes } from '../model/tweetLikes';
 import { StoreService } from '../services/store-service.service';
@@ -11,7 +12,7 @@ import { TweetService } from '../services/tweet.service';
 })
 export class TweetComponent implements OnInit {
 
-  constructor(private store : StoreService, private tweetService : TweetService) {
+  constructor(public store : StoreService, private tweetService : TweetService, private router : Router) {
     
   }
 
@@ -35,6 +36,10 @@ export class TweetComponent implements OnInit {
       console.log(data);
       this.getLikes()
     })
+  }
+
+  redirect() {
+    this.router.navigateByUrl("/login");
   }
 
 }

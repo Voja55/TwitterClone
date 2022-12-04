@@ -18,7 +18,8 @@
                 </div>   
                 <div class="row">
                     <div class="col-md-1"style="margin-top: 20px; ">
-                        <button type="button" class="btn btn-primary"(click)="likeTweet()">Like</button>
+                        <button type="button" class="btn btn-primary"(click)="likeTweet()" *ngIf="store.getLoginStatus() == true">Like</button>
+                        <button type="button" class="btn btn-primary"(click)="redirect()" *ngIf="store.getLoginStatus() == false">Like</button>
                     </div> 
                     <div class="col-md-1"style="margin-top: 25px;">
                         <p class="card-text" style="color: white;">{{tweet.likes}}</p>

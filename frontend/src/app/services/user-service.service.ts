@@ -21,7 +21,7 @@ export class UserService {
 
   regUserAuth(username: string, password: string, email : string, role: "regular"|"business") {
     return this.client.post<unknown>(environment.apiUrl + "auth_service/users", {
-      username: "aaaaa",
+      username: username,
       password: password,
       email : email,
       role: role
@@ -33,6 +33,13 @@ export class UserService {
       username: username,
       password: password,
       role: role
+    }, this.options())
+  }
+
+  confirmAuth(username: string, code: number){
+    return this.client.post<Jwt>(environment.apiUrl + "auth_service/confirm", {
+      username: username,
+      ccode: code
     }, this.options())
   }
 

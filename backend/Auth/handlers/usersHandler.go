@@ -39,7 +39,7 @@ type Jwt struct {
 }
 
 type PasswordReset struct {
-	Token string `json:"token"`
+	Token    string `json:"token"`
 	Password string `json:"password"`
 }
 
@@ -65,7 +65,6 @@ func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
 func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
 	id := vars["id"]
-
 
 	user, er := u.userRepo.GetUser(id)
 
@@ -152,7 +151,7 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 		if u.userRepo.Register(user) {
 			_, err = SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
 			if err != nil {
-				u.logger.Println("Faild to email", err)
+				u.logger.Println("Failed to email", err)
 			}
 			rw.WriteHeader(http.StatusAccepted)
 			rw.Write([]byte("202 - Accepted"))
@@ -181,14 +180,14 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 	}
 	u.logger.Println(data)
 
-	user, err := u.userRepo.GetUser(data.ID)
+	user, err := u.userRepo.GetUser(data.Username)
 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusNotFound)
 		u.logger.Println("Unable to find user.", err)
 		return
 	}
-	
+
 	if user.CCode != data.CCode {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
@@ -196,7 +195,7 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 	user.CCode = 0
 	if u.userRepo.UpdateUser(&user) == false {
 		rw.WriteHeader(http.StatusNotAcceptable)
-	} 
+	}
 	rw.WriteHeader(http.StatusAccepted)
 
 }
@@ -223,7 +222,7 @@ func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Re
 	//TODO zameni base64 sa nekom vrstom sifrovanja
 	//TODO Link ka frontu da bude env promenljiva
 	encoded := base64.StdEncoding.EncodeToString([]byte(user.Email))
-	_, err1 := SendMail(user.Email, "Reset password", "https://localhost:4200/resetPass?id=" + encoded)
+	_, err1 := SendMail(user.Email, "Reset password", "https://localhost:4200/resetPass?id="+encoded)
 	if err1 != nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return

@@ -10,9 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	"math/rand"
 	"os"
 	"time"
-	"math/rand"
 
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -125,12 +125,12 @@ func (u UserRepoMongoDb) Register(p *data.User) bool {
 	return true
 }
 
-func (u UserRepoMongoDb) GetUser(id string) (data.User, error) {
-	u.logger.Printf("Getting user ", id)
+func (u UserRepoMongoDb) GetUser(username string) (data.User, error) {
+	u.logger.Printf("Getting user ", username)
 	var result data.User
 
 	coll := u.getCollection()
-	filter := bson.D{{"id", id}}
+	filter := bson.D{{"username", username}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 
 	if err != nil {
@@ -198,15 +198,15 @@ func (u UserRepoMongoDb) GetUserByEmail(email string) (data.User, error) {
 func (u *UserRepoMongoDb) UpdateUser(user *data.User) (bool) {
 	coll := u.getCollection()
 	filter := bson.D{{"id", user.ID}}
-	
+
 	_, err := coll.ReplaceOne(context.TODO(), filter, user)
 	if err != nil {
 		u.logger.Println(err)
 		return false
 	}
 	return true
-	
-}  
+
+}
 
 func (u *UserRepoMongoDb) getCollection() *mongo.Collection {
 	db := u.client.Database("myDB")

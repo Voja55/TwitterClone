@@ -44,6 +44,36 @@
                 </div>
         </div>
 
+        <br/>
+        <br/>
+
+        <form #userForm="ngForm">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <label for="code">Confirmation code</label>
+                        <input type="text" class="form-control" id="code"
+                        required
+                        [(ngModel)]="user.code" name="code"
+                        #code="ngModel">
+                        <div [hidden]="code.valid ||!code.touched"
+                            class="alert alert-danger">
+                            Code is required
+                        </div>
+                    </div>
+                </div>
+                    
+            </div>
+    
+            <br/>
+
+            <div class="row">      
+                <div class="col-md-10 offset-md-1">
+                  <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid" (click)="confirm()">Confirm</button>
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>
 <br/>
