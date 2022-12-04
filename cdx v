@@ -1,0 +1,417 @@
+[33mcommit a03b8fee1d0afb268743b3150e8a473e2d6846bb[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m, [m[1;31morigin/tweet_cassandra[m[33m, [m[1;31morigin/develop[m[33m, [m[1;32mtweet_cassandra[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Tue Nov 29 21:10:44 2022 +0100
+
+    fix za lajkovanje
+
+[33mcommit d3c9583186fdcee7e6605914a9e02352eeb13714[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Tue Nov 29 20:15:39 2022 +0100
+
+    Dodato getovanje lajkova
+
+[33mcommit 866fdfe7ff95b2f71e8d089dbe011e2b996199b8[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Tue Nov 29 17:43:45 2022 +0100
+
+    Dodato lajkovanje bekend
+
+[33mcommit b644d3446bc3a6270b7cc6f7fee4f638fc385ef5[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Mon Nov 28 22:06:04 2022 +0100
+
+    getovanje i kreiranje tvita
+
+[33mcommit 57e23e90895e6abc5b383cbc18c5eaf94de9a984[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Mon Nov 28 20:53:46 2022 +0100
+
+    povezivanje sa cass - ne rade hendleri
+
+[33mcommit 7c76c151af04f00af1a3128366b8ba77d7d91473[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sun Nov 27 15:24:41 2022 +0100
+
+    cors fix
+
+[33mcommit 52fb8d5e53c231f9a4f8791cee26167f7ef07bed[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Sat Nov 26 19:08:09 2022 +0100
+
+    API HTTPs - Done
+
+[33mcommit 802c884c046d64a2a6df842012dfc983eb18e476[m
+Merge: e8ac43a d32ef18
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Fri Nov 25 15:58:48 2022 +0100
+
+    Merge branch 'jwt_frontend' into develop
+
+[33mcommit d32ef189bf5e8ec3bb1b6e7a820b3f1ab7f92096[m[33m ([m[1;31morigin/jwt_frontend[m[33m, [m[1;32mjwt_frontend[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Fri Nov 25 15:54:32 2022 +0100
+
+    fix za registraciju
+
+[33mcommit e8ac43a10a5fcb576748730101d446a22a409a88[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 24 21:42:20 2022 +0100
+
+    small regex fix
+
+[33mcommit 534ccff836090d8d3d61094c54a7e92a78b337c1[m
+Merge: bf15252 0180239
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 24 21:16:17 2022 +0100
+
+    conflict fix
+
+[33mcommit bf1525291562305b8a26cdae6681374dca011b33[m
+Merge: f0aa348 964c6c0
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 24 21:10:43 2022 +0100
+
+    Merge branch 'data_validation' into develop
+
+[33mcommit 964c6c02c2e3ac8b60b2f5da2d149de367b822ac[m[33m ([m[1;31morigin/data_validation[m[33m)[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 24 20:04:44 2022 +0100
+
+    validacija front i back za login
+
+[33mcommit fe1566aee3c0a1ea39b3bac9285a335f652a46d8[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 24 17:57:48 2022 +0100
+
+    validacija na back za registraciju
+
+[33mcommit 01802392d80711c303afbb57e29f442d5fa5fe18[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Thu Nov 24 17:49:29 2022 +0100
+
+    Dodat logout
+
+[33mcommit 6da1e475187edcc125b1736b378e7b14f2a9216b[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Thu Nov 24 17:08:18 2022 +0100
+
+    Dodat jwt na front
+
+[33mcommit dfd51175499bf2d1e4cf78505b621709555917ab[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Thu Nov 24 13:33:47 2022 +0100
+
+    obrisan suvisan kod
+
+[33mcommit c85dc1beffdc2971d207dfd064ad04bc30da6d1c[m
+Merge: 0bb7187 f0aa348
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 23 22:50:11 2022 +0100
+
+    Merge branch 'develop' of https://github.com/Voja55/TwitterClone into develop
+
+[33mcommit 0bb7187042cd43a12d1e9bc844097ed8d363c0f9[m[33m ([m[1;31morigin/connect_frontend[m[33m, [m[1;32mconnect_frontend[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 23 22:36:32 2022 +0100
+
+    povezan sa frontom, radi cors
+
+[33mcommit 2ba2a687e435a89dfdbf88ab6cbf39a06e90479b[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 23 19:46:03 2022 +0100
+
+    popravljen cors, al puca kad je error
+
+[33mcommit f0aa3486c92b8747806d378f3d8bace0ca57df1d[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Wed Nov 23 18:40:31 2022 +0100
+
+    fix git ignore
+
+[33mcommit fe417ec2451a470763d7e8cd7da17241ec66a7e0[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 23 17:44:10 2022 +0100
+
+    jedan bag popravljen, ispo drugi
+
+[33mcommit f73c7efc14b33e5de991b7ca74a10f7f5fca28db[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Wed Nov 23 15:48:14 2022 +0100
+
+    HTTPs odlozen - API ne podrzava
+
+[33mcommit d017fe091958606861336cb39dd60988e24cd6e4[m
+Merge: 06e02d8 0208f0f
+Author: dejan <dejan.jovovic2002@gmail.com>
+Date:   Wed Nov 23 13:01:04 2022 +0100
+
+    Merge branch 'develop' of https://github.com/Voja55/TwitterClone into develop
+    
+    # Conflicts:
+    #       backend/.idea/workspace.xml
+
+[33mcommit 06e02d8490cdd44f87c7ded48051b250f4f042c7[m
+Author: dejan <dejan.jovovic2002@gmail.com>
+Date:   Wed Nov 23 12:56:20 2022 +0100
+
+    test
+
+[33mcommit a8f655c0852775acb31532a115452edad623ddfe[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Tue Nov 22 17:12:58 2022 +0100
+
+    Uredjena validacija na frontu za registraciju regexom na back ne radi
+
+[33mcommit 0e65cd0f10dd3f34eb4f79ce0d6611c18fe792b7[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Mon Nov 21 22:18:54 2022 +0100
+
+    povezano ali ne radi problemi sa CORS-om
+
+[33mcommit 76b006ce707d30c5b3ef87322fad9daaa4377a2c[m
+Author: dejan <dejan.jovovic2002@gmail.com>
+Date:   Mon Nov 21 20:38:28 2022 +0100
+
+    dodato jwt generisanje
+
+[33mcommit 0208f0f065623b5c914788c34ccfd3cec86b3e06[m[33m ([m[1;31morigin/zastita_podataka[m[33m, [m[1;32mzastita_podataka[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Mon Nov 21 17:02:12 2022 +0100
+
+    dodato hesiranje sifre
+
+[33mcommit b8b257b56dd82605e8c4ac8beaeb4f74b4d8dca5[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sun Nov 20 22:14:35 2022 +0100
+
+    fix za api gateway
+
+[33mcommit 0d0e777f6e8eee54e9f66762b623743b338d55d1[m[33m ([m[1;31morigin/api_gateway[m[33m, [m[1;32mapi_gateway[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sun Nov 20 15:55:45 2022 +0100
+
+    api gateway, radi
+
+[33mcommit afa0e6c815ad2dabf5274fabd69e3baf74b4ec85[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sat Nov 19 21:47:26 2022 +0100
+
+    api gateway dodta, ne radi
+
+[33mcommit e150ec4e675b0dac52c946f5505db372bd99229d[m[33m ([m[1;31morigin/tweet_like_func[m[33m)[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 17 21:44:48 2022 +0100
+
+    dodata funkcionalnost za like tweet-a
+
+[33mcommit 1f1608f8d4ce8de029278c3eeebf597d7505a230[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Thu Nov 17 20:42:27 2022 +0100
+
+    Popravljeno getovanje tweet-a po id
+
+[33mcommit 4b18eaf63e395c7774afbec2f84966631a2b2d56[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Thu Nov 17 18:35:30 2022 +0100
+
+    fix greske u resavanju konflikta
+
+[33mcommit fe0b8a693344157ac300c00da46bfa86a21970ab[m
+Merge: 8011d85 18ec853
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Thu Nov 17 18:31:58 2022 +0100
+
+    resenje konflikta
+
+[33mcommit 8011d8531cc15c21c31f95df370d817733eb7494[m[33m ([m[1;32mdokerizacija_fix[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Thu Nov 17 18:26:56 2022 +0100
+
+    Dokerizacija GOTOVA
+
+[33mcommit 3aeae3f2170b6387756c357b3b4426d667708872[m[33m ([m[1;31morigin/dokerizacija_fix[m[33m)[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Thu Nov 17 11:54:31 2022 +0100
+
+    Asistencija - FIXED
+
+[33mcommit f50db6b8e5f27ca1bb5c0fad40e6d7c35659c5ee[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 16 22:12:29 2022 +0100
+
+    neki kao fix
+
+[33mcommit aa437a9c5b333b9d5faf291a85838886a74b2e83[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 16 18:55:31 2022 +0100
+
+    Pokrece se auth, ali baza i tweet i dalje ne rade
+
+[33mcommit 18ec853844758ddf72e3491dfe03f789568a634e[m
+Author: dejan <dejan.jovovic2002@gmail.com>
+Date:   Wed Nov 16 17:36:42 2022 +0100
+
+    kreiranje tweeta
+
+[33mcommit a574eb357f748108495076d3973760d0cbe7876f[m
+Author: Igor <igorpapsot@gmail.com>
+Date:   Tue Nov 15 14:41:45 2022 +0100
+
+    permisija dodata, idalje ne radi
+
+[33mcommit cbe7023f8f7e3c2958534c139470cdc074f1343d[m
+Author: Igor <igorpapsot@gmail.com>
+Date:   Tue Nov 15 13:45:47 2022 +0100
+
+    ZA NE DAJ BOZE
+
+[33mcommit 3109531316e70cf3119eec4ea681c5da4335ab97[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Sun Nov 13 17:57:07 2022 +0100
+
+    Added Tweet Service - Sprint 2
+
+[33mcommit 92f5ac8be22f0983155e5e004e873bd00f0b4019[m[33m ([m[1;32mmongoDbIzmena[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sat Nov 12 23:35:48 2022 +0100
+
+    Baza prebacena sa cloud na local
+
+[33mcommit 02cb316c5d1751c016364531d54ee8a100b6013b[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 9 22:03:40 2022 +0100
+
+    merge resolved
+
+[33mcommit 9dbe06bcdc2a70f765963d463c21271cfed4d7c2[m
+Merge: 2377113 7d3e9fe
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 9 22:02:49 2022 +0100
+
+    merge resolved
+
+[33mcommit 23771130279bc36f2b3daf1b95c220c2f8a3b075[m[33m ([m[1;31morigin/registracija_fix[m[33m, [m[1;32mregistracija_fix[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Nov 9 21:30:28 2022 +0100
+
+    error handling za register i login
+
+[33mcommit 7d3e9fe57334f495834a8d30624b7c11ae01ce18[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Wed Nov 9 21:26:13 2022 +0100
+
+    FIX id se ne upisuje rucno vise
+
+[33mcommit 77ad4c010cc1485cd602457523c6a5b15f742a1d[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Wed Nov 9 20:50:57 2022 +0100
+
+    FIX pri registraciji username mora biti jedinstveno
+
+[33mcommit 712501d44599fe91cfc559082cfcae9253f6d829[m[33m ([m[1;32mcode_refactor[m[33m)[m
+Author: Nenad Dinic <nenad.d.dinic01@gmail.com>
+Date:   Wed Nov 9 17:05:58 2022 +0100
+
+    popravka logina i registera
+
+[33mcommit e148b1aaffe036febd24d588110eae17c25a4659[m
+Author: dejan <dejan.jovovic2002@gmail.com>
+Date:   Wed Nov 9 16:29:11 2022 +0100
+
+    register untested
+
+[33mcommit 7bd9894dbf6026b0af8ef2b5c55f19861c905946[m[33m ([m[1;31morigin/1.2_Login[m[33m)[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Wed Nov 9 00:20:21 2022 +0100
+
+    Solving Role - Almost done
+
+[33mcommit e8a43971967530bbe1ef3e7cce85302dc38cdadb[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Tue Nov 8 23:31:31 2022 +0100
+
+    Solving Role - Undone
+
+[33mcommit 706848ca59661dbe99fab38d2fc563451bfb62da[m
+Author: Igor <igorpapsot@gmail.com>
+Date:   Tue Nov 8 14:50:47 2022 +0100
+
+    Dodat rad sa business userom u bazi
+
+[33mcommit c8e192076573194d7a1f304963fb1afec64e7fa3[m
+Author: Igor <igorpapsot@gmail.com>
+Date:   Tue Nov 8 14:35:48 2022 +0100
+
+    code cleanup
+
+[33mcommit a2a7445660ce8e578d1709022d9665d6327fdf4e[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Tue Nov 8 13:06:10 2022 +0100
+
+    login DONE - untested
+
+[33mcommit 0e8358f4064891cd03f1461772b4b0cede437694[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Tue Nov 8 00:37:40 2022 +0100
+
+    Login - pt 1/2
+
+[33mcommit 04bf17e35a2714b65fb44142f2461c68ff614970[m[33m ([m[1;31morigin/db[m[33m, [m[1;32mdb[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Mon Nov 7 00:10:30 2022 +0100
+
+    Dodat findOne
+
+[33mcommit 909b3d96bcd7d5e735ccab9497c2376ef03a0807[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sun Nov 6 23:24:47 2022 +0100
+
+    Povezivanje sa mongodb
+
+[33mcommit d0592506ce2cc32d82d9b8627f07ad48c2e97e99[m
+Author: Voja55 <vojislav.culibrk@mail.ru>
+Date:   Sun Nov 6 00:39:30 2022 +0100
+
+    kreirana develop grana
+
+[33mcommit 874a578b0cc52c92732c55545881304dc8639788[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Igor <igorpapsot@gmail.com>
+Date:   Sat Oct 29 16:53:20 2022 +0200
+
+    Bekend pocetak
+
+[33mcommit aadeddc4b4fa93631f019b07bd20889e1489a6d6[m[33m ([m[1;31morigin/gui[m[33m)[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Wed Oct 26 18:11:40 2022 +0200
+
+    Dodat izgled profila biznis korisnika
+
+[33mcommit 8448a95689b69062e62ba0fc37b30c8f792469ae[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Mon Oct 24 21:46:46 2022 +0200
+
+    izmen izgleda profila itd
+
+[33mcommit 94bf7741d48868bee813b54e897ea9daacdad150[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Mon Oct 24 21:13:02 2022 +0200
+
+    Izmena izgleda pocetne stranice
+
+[33mcommit e7e12a6d9a1f02bc1a3ba7dc793676241df76ba4[m
+Author: Nenad Dinic <dinic.sr44.2020@uns.ac.rs>
+Date:   Mon Oct 24 10:32:34 2022 +0200
+
+    test
+
+[33mcommit fbb028666d845c55adfe4e1c44e8a4816f7ab0f9[m
+Author: Nenad Dinic <dinic.sr44.2020@uns.ac.rs>
+Date:   Mon Oct 24 10:31:58 2022 +0200
+
+    ispravljen git ignore
+
+[33mcommit 1b76e320995cd01087289f42d8da24e0f5f3a26d[m
+Author: igorpapsot <igorpapsot@gmail.com>
+Date:   Sun Oct 23 18:41:40 2022 +0200
+
+    first commit

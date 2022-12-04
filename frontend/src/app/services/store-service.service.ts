@@ -8,7 +8,14 @@ export class StoreService{
 
   constructor() { 
     if(sessionStorage.getItem('jwt')){
+      var t = sessionStorage.getItem('jwt')
       this.loginStatus = true;
+      this.decodedToken = this.getDecodedAccessToken(t)
+      this.role = this.decodedToken.role;   
+      this.username = this.decodedToken.username;
+      console.log(this.decodedToken)
+      console.log(this.username)
+      console.log(this.role)
     }
     else {
       this.loginStatus = false;
@@ -33,14 +40,18 @@ export class StoreService{
     return this.loginStatus
   }
 
+  getUsername(): string{
+    return this.username
+  }
+
   login(token: string) {
     sessionStorage.setItem('jwt', token)
     this.token = token;
     
     this.loginStatus = true;
     this.decodedToken = this.getDecodedAccessToken(this.token);
-    this.role = this.decodedToken.role.authority;
-    this.username = this.decodedToken.sub;
+    this.role = this.decodedToken.role;
+    this.username = this.decodedToken.username;
 
     console.log(this.username);
     console.log(this.role);

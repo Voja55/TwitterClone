@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Tweet } from '../model/tweet';
+import { StoreService } from '../services/store-service.service';
+import { TweetService } from '../services/tweet.service';
 
 @Component({
   selector: 'app-tweet-popup',
@@ -8,7 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class TweetPopupComponent implements OnInit {
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private store : StoreService, private tweetService : TweetService) { }
 
   ngOnInit(): void {
   }
@@ -17,6 +20,12 @@ export class TweetPopupComponent implements OnInit {
     this.modalService.open(content, { size: 'lg' });
   }
 
-  tweet : any = new Object;
-  newTweet() {}
+  tweet : Tweet = new Tweet();
+
+  newTweet() {
+    this.tweet.username = this.store.getUsername();
+    this.tweetService.postTweet(this.tweet).subscribe(data => {
+      console.log(data);
+    })
+  }
 }

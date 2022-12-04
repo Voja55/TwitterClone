@@ -4,6 +4,8 @@ import (
 	"Tweet/data"
 	"Tweet/db"
 	"context"
+	"github.com/gocql/gocql"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
@@ -38,20 +40,22 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 }
 
 func (t *TweetsHandler) GetLikes(rw http.ResponseWriter, h *http.Request) {
-	tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
-	if tweet.TweetId.String() == "" {
+	vars := mux.Vars(h)
+	var id = vars["id"]
+	if id == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-
-	likes, err := t.tweetRepo.GetLikes(tweet.TweetId)
+	idUUID, err := gocql.ParseUUID(id)
+	likes, err := t.tweetRepo.GetLikes(idUUID)
 	if err != nil {
 		http.Error(rw, "Problem with getting likes from db", http.StatusInternalServerError)
 		t.logger.Println("Problem with getting likes from db :", err)
 		return
 	}
 
-	err = likes.ToJSON(rw)
+	tweetLikes := data.TweetLikes{Likes: likes}
+	err = tweetLikes.ToJSON(rw)
 
 	if err != nil {
 		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
@@ -62,12 +66,12 @@ func (t *TweetsHandler) GetLikes(rw http.ResponseWriter, h *http.Request) {
 
 func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
 	liked := h.Context().Value(KeyUser{}).(*data.Like)
-	if liked.UserId.String() == "" || liked.TweetId.String() == "" {
+	if liked.Username == "" || liked.TweetId.String() == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
-	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.UserId)
+	result := t.tweetRepo.LikeTweet(liked.TweetId, liked.Username)
 	if result == true {
 		rw.WriteHeader(http.StatusAccepted)
 		return
@@ -80,7 +84,7 @@ func (t *TweetsHandler) LikeTweet(rw http.ResponseWriter, h *http.Request) {
 
 func (t *TweetsHandler) CreateTweet(rw http.ResponseWriter, h *http.Request) {
 	tweet := h.Context().Value(KeyUser{}).(*data.Tweet)
-	if tweet.UserId.String() == "" || tweet.Text == "" {
+	if tweet.Username == "" || tweet.Text == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}

@@ -69,8 +69,7 @@ func main() {
 	likeTweetRouter.Use(tweetsHandler.MiddlewareLikeValidation)
 
 	getLikeTweetRouter := routerTweet.Methods(http.MethodGet).Subrouter()
-	getLikeTweetRouter.HandleFunc("/tweets/likes", tweetsHandler.GetLikes)
-	getLikeTweetRouter.Use(tweetsHandler.MiddlewareTweetsValidation)
+	getLikeTweetRouter.HandleFunc("/tweets/likes/{id}", tweetsHandler.GetLikes)
 
 	getTweetsByUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getTweetsByUserRouter.HandleFunc("/user/tweets/{id:[0-9]+}", tweetsHandler.GetTweetsByUser)
@@ -80,7 +79,7 @@ func main() {
 	//Normally you would set this to a set of ip's you want this api to serve. If you have an associated frontend app
 	//you would put the ip of the server where the frontend is running. The only time you don't need cors is when you
 	//calling the api from the same ip, or when you are using the proxy (for eg. Nginx)
-	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"*"}))
+	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"https://localhost:4200/"}))
 
 	//Initialize the server
 	server := http.Server{
