@@ -1,4 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Token } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Jwt } from '../model/jwt';
@@ -41,6 +42,19 @@ export class UserService {
       username: username,
       ccode: code
     }, this.options())
+  }
+
+  requestResetAuth(email: string){
+    return this.client.post<unknown>(environment.apiUrl + "auth_service/requestreset", {
+      email: email
+    }, this.options())
+  }
+
+  changePassAuth(token: string, password: string){
+    return this.client.post<unknown>(environment.apiUrl + "auth_service/reset", {
+      token: token,
+      password: password
+    })
   }
 
 }

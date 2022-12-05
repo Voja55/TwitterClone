@@ -1,64 +1,61 @@
-<br/>
+<br />
 <div class="container">
-    <div [hidden]="submitted">
-      <form #userForm="ngForm">
+  <div [hidden]="submitted">
+    <form #userForm="ngForm">
 
-        <div class="row">
-          <div class="col-md-10 offset-md-1">
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" class="form-control" id="username"
-                required
-                [(ngModel)]="user.username" name="name"
-                #name="ngModel" pattern="^(?=[a-z0-9._]{5,25}$)(?!.*[_.]{2})[^_.].*[^_.]$">
-              <div [hidden]="name.valid || !name.touched"
-                class="alert alert-danger">
-                Username is required
-              </div>
+      <div class="row">
+        <div class="col-md-10 offset-md-1">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" required [(ngModel)]="user.username" name="name"
+              #name="ngModel" pattern="^(?=[a-z0-9._]{5,25}$)(?!.*[_.]{2})[^_.].*[^_.]$">
+            <div [hidden]="name.valid || !name.touched" class="alert alert-danger">
+              Username is required
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col-md-10 offset-md-1">
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" id="password"
-                required
-                [(ngModel)]="user.password" name="password"
-                #password="ngModel" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[,@$!._?&-])[A-Za-z\d,@$!._?&-]{8,}$">
-              <div [hidden]="password.valid || !password.touched"
-                class="alert alert-danger">
-                Password is required
-              </div>
+      <div class="row">
+        <div class="col-md-10 offset-md-1">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" required [(ngModel)]="user.password"
+              name="password" #password="ngModel"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[,@$!._?&-])[A-Za-z\d,@$!._?&-]{8,}$">
+            <div [hidden]="password.valid || !password.touched" class="alert alert-danger">
+              Password is required
             </div>
           </div>
         </div>
+      </div>
 
-        <br/>
-
-        <div class="row">      
-          <div class="col-md-10 offset-md-1">
-            <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid || !captchaValid" (click)="login()">Login</button>
-          </div>
+      <div class="row">
+        <div class="col-md-10 offset-md-1">
+          <a routerLink="/requestReset" >Forgot your password?</a>
         </div>
-          
-        <br/>
+      </div>
 
-        <div [hidden]="captcha">
-          <div class="col-md-10 offset-md-4">
+      <br/>
+
+      <div class="row">
+        <div class="col-md-10 offset-md-1">
+          <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid || !captchaValid"
+            (click)="login()">Login</button>
+        </div>
+      </div>
+
+      <br />
+
+      <div>
+        <div class="col-md-10 offset-md-4">
           <p *ngIf="storeService.getLoginStatus() == true">Success!</p>
           <re-captcha (resolved)="resolved($event)" siteKey="6LdohEcjAAAAAHaQBWe4a3B05xMGZsiYmVGGug7F"></re-captcha>
         </div>
       </div>
-        <div [hidden]="!captcha">
-          <div class="col-md-10 offset-md-4">
-          <p>You are not а robot</p>
-        </div>
-      </div>
 
 
-      </form>
-    </div>
-  
+    </form>
   </div>
+
+</div>

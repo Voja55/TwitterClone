@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user-service.service';
 import { LogOutComponent } from './log-out/log-out.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { RequestResetPageComponent } from './request-reset-page/request-reset-page.component';
+import { ResetPasswordPageComponent } from './reset-password-page/reset-password-page.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { RecaptchaModule } from 'ng-recaptcha';
     TweetPopupComponent,
     TweetComponent,
     BusinessAccountComponent,
-    LogOutComponent
+    LogOutComponent,
+    RequestResetPageComponent,
+    ResetPasswordPageComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,8 @@ import { RecaptchaModule } from 'ng-recaptcha';
     NgbModule,
     FormsModule,
     HttpClientModule,
-    RecaptchaModule
+    RecaptchaModule,
+    ReactiveFormsModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

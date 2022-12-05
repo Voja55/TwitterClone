@@ -1,0 +1,28 @@
+<div class="container">
+    <div>
+            <form [formGroup]="formData" (submit)="requestReset()">
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                          <div class="form-group">
+                                <label for="email">Email</label>
+                                <input #email type="email" class="form-control gray" id="email" required name="email"
+                                    pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" formControlName="email">
+                                <div [hidden]="formData.valid"
+                                      class="alert alert-danger">
+                                      Email is required and must be valid
+                                </div>
+                          </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <button type="submit" class="btn btn-success btn-block">Request password reset</button>
+                    </div>
+                </div>
+            </form>
+      </div>
+      <br/>
+      <br/>
+</div>
+

@@ -157,11 +157,6 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 			rw.Write([]byte("202 - Accepted"))
 			return
 		}
-		if u.userRepo.Register(user) == true {
-			rw.WriteHeader(http.StatusAccepted)
-			rw.Write([]byte("202 - Accepted"))
-			return
-		}
 	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
@@ -228,6 +223,7 @@ func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Re
 		return
 	}
 	rw.WriteHeader(http.StatusAccepted)
+	rw.Write([]byte("202 - Accepted"))
 }
 
 func (u *UsersHandler) ResetPassword(rw http.ResponseWriter, req *http.Request) {
