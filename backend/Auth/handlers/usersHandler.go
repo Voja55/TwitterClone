@@ -103,7 +103,6 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 			http.Error(rw, "Unable to login", http.StatusInternalServerError)
 			u.logger.Println("Unable to login", err)
 			rw.WriteHeader(http.StatusUnauthorized)
-			rw.Write([]byte("401 - Unauthorized"))
 			return
 		}
 
@@ -135,7 +134,6 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
-	rw.Write([]byte("406 - Not acceptable"))
 }
 
 func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
@@ -145,7 +143,6 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 		_, err := u.userRepo.GetUserByUsername(user.Username)
 		if err == nil {
 			rw.WriteHeader(http.StatusNotAcceptable)
-			rw.Write([]byte("406 - Not acceptable"))
 			return
 		}
 		if u.userRepo.Register(user) {
@@ -154,18 +151,15 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 				u.logger.Println("Failed to email", err)
 			}
 			rw.WriteHeader(http.StatusAccepted)
-			rw.Write([]byte("202 - Accepted"))
 			return
 		}
 		if u.userRepo.Register(user) == true {
 			rw.WriteHeader(http.StatusAccepted)
-			rw.Write([]byte("202 - Accepted"))
 			return
 		}
 	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
-	rw.Write([]byte("406 - Not acceptable"))
 }
 
 func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
