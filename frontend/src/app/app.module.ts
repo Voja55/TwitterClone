@@ -14,7 +14,6 @@ import { RegisterBusinessUserComponent } from './register-business-user/register
 import { TweetsComponent } from './tweets/tweets.component';
 import { TweetPopupComponent } from './tweet-popup/tweet-popup.component';
 import { TweetComponent } from './tweet/tweet.component';
-import { BusinessAccountComponent } from './business-account/business-account.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user-service.service';
 import { LogOutComponent } from './log-out/log-out.component';
@@ -32,7 +31,6 @@ import { RecaptchaModule } from 'ng-recaptcha';
     TweetsComponent,
     TweetPopupComponent,
     TweetComponent,
-    BusinessAccountComponent,
     LogOutComponent
   ],
   imports: [

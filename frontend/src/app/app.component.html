@@ -5,7 +5,6 @@
     <a class="nav-item nav-link white" href="#" routerLink="/login" routerLinkActive="active" *ngIf="store.getLoginStatus() == false">Sign in</a>
     <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/logOut" *ngIf="store.getLoginStatus() == true">Log out</a>
     <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/account" *ngIf="store.getLoginStatus() == true">Account</a>
-    <a class="nav-item nav-link white" href="#"  routerLinkActive="active" routerLink="/businessAccount" *ngIf="store.getLoginStatus() == true">Business account</a>
   </div>
 </nav>
 <router-outlet></router-outlet>

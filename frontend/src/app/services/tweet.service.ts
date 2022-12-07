@@ -26,6 +26,11 @@ export class TweetService {
     return this.client.get<Tweet[]>(environment.apiUrl + "tweet_service/tweets");
   }
 
+  
+  getTweetsByUser() : Observable<Tweet[]> {
+    return this.client.get<Tweet[]>(environment.apiUrl + "tweet_service/tweets");
+  }
+
   postTweet(tweet : Tweet){
     console.log(tweet)
     return this.client.post<unknown>(environment.apiUrl + "tweet_service/tweets", {

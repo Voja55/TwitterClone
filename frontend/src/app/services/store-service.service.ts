@@ -44,6 +44,10 @@ export class StoreService{
     return this.username
   }
 
+  getRole(): string {
+    return this.role
+  }
+
   login(token: string) {
     sessionStorage.setItem('jwt', token)
     this.token = token;
