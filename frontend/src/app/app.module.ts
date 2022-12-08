@@ -33,7 +33,9 @@ import { ResetPasswordPageComponent } from './reset-password-page/reset-password
     TweetsComponent,
     TweetPopupComponent,
     TweetComponent,
-    LogOutComponent
+    LogOutComponent,
+    RequestResetPageComponent,
+    ResetPasswordPageComponent
   ],
   imports: [
     BrowserModule,
