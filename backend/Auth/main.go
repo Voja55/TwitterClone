@@ -94,7 +94,7 @@ func main() {
 		Handler:      cors(routerUser),  // handler to invoke, http.DefaultServeMux if nil
 		IdleTimeout:  120 * time.Second, // IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled.
 		ReadTimeout:  2 * time.Second,   // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
-		WriteTimeout: 2 * time.Second,   // WriteTimeout is the maximum duration before timing out writes of the response.
+		WriteTimeout: 4 * time.Second,   // WriteTimeout is the maximum duration before timing out writes of the response.
 	}
 
 	logger.Println("Server listening on port", port)

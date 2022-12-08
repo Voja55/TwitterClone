@@ -1,5 +1,5 @@
 <br/>
-<div class="container">
+<div class="container" *ngIf="store.getRole() == 'regular'">
     <div>
 
         <div class="row">
@@ -61,6 +61,70 @@
                             Code is required
                         </div>
                     </div>
+                </div>       
+            </div>
+    
+            <br/>
+            <br/>
+
+            <div class="row">      
+                <div class="col-md-10 offset-md-1">
+                  <button type="button" class="btn btn-success btn-block" [disabled]="!userForm.form.valid" (click)="confirm()">Confirm</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<br/>
+<div class="container" *ngIf="store.getRole() == 'business'">
+    <div>
+
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <label for="username">Username</label>
+                <input type="text" class="form-control gray" id="username" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <label for="companyName">Company name</label>
+                    <input type="text" class="form-control gray" id="companyName" readonly>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control gray" id="email" readonly>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <label for="webSite">Web site</label>
+                    <input type="text" class="form-control gray" id="webSite" readonly>
+                </div>
+        </div>
+
+        <br/>
+        <br/>
+
+        <form #userForm="ngForm">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <label for="code">Confirmation code</label>
+                        <input type="text" class="form-control" id="code"
+                        required
+                        [(ngModel)]="user.code" name="code"
+                        #code="ngModel">
+                        <div [hidden]="code.valid ||!code.touched"
+                            class="alert alert-danger">
+                            Code is required
+                        </div>
+                    </div>
                 </div>
                     
             </div>
@@ -77,6 +141,11 @@
     </div>
 </div>
 <br/>
+
+<div *ngFor="let tweet of tweets | async; index as i; first as isFirst">
+    <app-tweet [tweet] = "tweet"></app-tweet>
+</div>
+
 
 
 

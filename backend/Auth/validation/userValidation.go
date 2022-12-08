@@ -61,7 +61,7 @@ func ValidateUsername(un string) bool {
 }
 
 func ValidateRole(r string) bool {
-	if r == "regular" || r == "buisiness" {
+	if r == "regular" || r == "business" {
 		return true
 	}
 	return false

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { Tweet } from '../model/tweet';
 import { User } from '../model/user';
 import { StoreService } from '../services/store-service.service';
+import { TweetService } from '../services/tweet.service';
 import { UserService } from '../services/user-service.service';
 
 @Component({
@@ -10,9 +13,10 @@ import { UserService } from '../services/user-service.service';
 })
 export class AccountComponent implements OnInit {
 
-  constructor(private store : StoreService, private userService : UserService) { }
+  constructor(public store : StoreService, private userService : UserService, private tweetService : TweetService) { }
 
   ngOnInit(): void {
+    this.getTweets()
   }
 
   user : User = new User();
@@ -31,4 +35,12 @@ export class AccountComponent implements OnInit {
       console.log(data);
     })
   }
+
+  tweets!: Observable<Tweet[]>;
+
+  getTweets(){
+    this.tweets = this.tweetService.getTweetsByUser(this.store.getUsername())
+  }
+
+  
 }

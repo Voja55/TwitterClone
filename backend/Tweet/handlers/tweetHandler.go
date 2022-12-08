@@ -39,6 +39,29 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 	}
 }
 
+func (t *TweetsHandler) GetTweetsByUser(rw http.ResponseWriter, h *http.Request) {
+	vars := mux.Vars(h)
+	var un = vars["username"]
+	if un == "" {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	tweets, err := t.tweetRepo.GetTweetsByUser(un)
+	if err != nil {
+		http.Error(rw, "Problem with getting tweets from db", http.StatusInternalServerError)
+		t.logger.Println("Problem with getting tweets from db :", err)
+		return
+	}
+
+	err = tweets.ToJSON(rw)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		t.logger.Println("Unable to convert to json :", err)
+		return
+	}
+}
+
 func (t *TweetsHandler) GetLikes(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
 	var id = vars["id"]
@@ -149,8 +172,4 @@ func (t *TweetsHandler) MiddlewareContentTypeSet(next http.Handler) http.Handler
 
 		next.ServeHTTP(rw, h)
 	})
-}
-
-func (t *TweetsHandler) GetTweetsByUser(writer http.ResponseWriter, request *http.Request) {
-
 }
