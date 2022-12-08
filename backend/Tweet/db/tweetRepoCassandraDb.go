@@ -63,8 +63,8 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 	sr.logger.Println("Creating tables...")
 	err := sr.session.Query(
 		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s 
-					(tweet_id UUID, username text, text text, 
-					PRIMARY KEY (tweet_id)) `,
+					(username text, tweet_id UUID, text text, 
+					PRIMARY KEY (username)) `,
 			"tweet_by_user")).Exec()
 	if err != nil {
 		sr.logger.Println(err)
@@ -82,12 +82,33 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 
 func (t TweetRepoCassandraDb) GetTweets() (data.Tweets, error) {
 	t.logger.Println("Getting tweets...")
-	scanner := t.session.Query(`SELECT tweet_id, username, text FROM tweet_by_user`).Iter().Scanner()
+	scanner := t.session.Query(`SELECT username, tweet_id, text FROM tweet_by_user`).Iter().Scanner()
 
 	var results data.Tweets
 	for scanner.Next() {
 		var tweet data.Tweet
-		err := scanner.Scan(&tweet.TweetId, &tweet.Username, &tweet.Text)
+		err := scanner.Scan(&tweet.Username, &tweet.TweetId, &tweet.Text)
+		if err != nil {
+			t.logger.Println(err)
+			return nil, err
+		}
+		results = append(results, &tweet)
+	}
+	if err := scanner.Err(); err != nil {
+		t.logger.Println(err)
+		return nil, err
+	}
+	return results, nil
+}
+
+func (t *TweetRepoCassandraDb) GetTweetsByUser(username string) (data.Tweets, error) {
+	t.logger.Println("Getting tweets...")
+	scanner := t.session.Query(`SELECT username, tweet_id, text FROM tweet_by_user WHERE username = ?`, username).Iter().Scanner()
+
+	var results data.Tweets
+	for scanner.Next() {
+		var tweet data.Tweet
+		err := scanner.Scan(&tweet.Username, &tweet.TweetId, &tweet.Text)
 		if err != nil {
 			t.logger.Println(err)
 			return nil, err
@@ -130,9 +151,9 @@ func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {
 	t.logger.Println("Creating tweet...")
 	p.TweetId = gocql.TimeUUID()
 	err := t.session.Query(
-		`INSERT INTO tweet_by_user (tweet_id, username, text) 
+		`INSERT INTO tweet_by_user (username, tweet_id, text) 
 		VALUES (?, ?, ?)`,
-		p.TweetId, p.Username, p.Text).Exec()
+		p.Username, p.TweetId, p.Text).Exec()
 	if err != nil {
 		t.logger.Println(err)
 		return false, err
@@ -195,9 +216,4 @@ func (t *TweetRepoCassandraDb) LikeTweet(tweetId gocql.UUID, username string) bo
 
 	t.logger.Printf("Liked tweet with id: %v\n", p.TweetId)
 	return true
-}
-
-func (t *TweetRepoCassandraDb) GetTweetsByUser(username string) (data.Tweets, error) {
-	//TODO implement me
-	panic("implement me")
 }

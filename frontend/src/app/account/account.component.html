@@ -141,7 +141,7 @@
     </div>
 </div>
 <br/>
-//ovde se za sad prikazuju svi tweetovi, bice dodato da se prikazu samo od korisnika
+
 <div *ngFor="let tweet of tweets | async; index as i; first as isFirst">
     <app-tweet [tweet] = "tweet"></app-tweet>
 </div>

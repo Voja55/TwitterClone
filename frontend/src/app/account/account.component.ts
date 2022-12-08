@@ -39,7 +39,7 @@ export class AccountComponent implements OnInit {
   tweets!: Observable<Tweet[]>;
 
   getTweets(){
-    this.tweets = this.tweetService.getTweets()
+    this.tweets = this.tweetService.getTweetsByUser(this.store.getUsername())
   }
 
   

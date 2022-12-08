@@ -72,7 +72,7 @@ func main() {
 	getLikeTweetRouter.HandleFunc("/tweets/likes/{id}", tweetsHandler.GetLikes)
 
 	getTweetsByUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
-	getTweetsByUserRouter.HandleFunc("/user/tweets/{id:[0-9]+}", tweetsHandler.GetTweetsByUser)
+	getTweetsByUserRouter.HandleFunc("/tweets/user/{username}", tweetsHandler.GetTweetsByUser)
 
 	//Set cors. Generally you wouldn't like to set cors to a "*". It is a wildcard and it will match any source.
 	//Normally you would set this to a set of ip's you want this api to serve. If you have an associated frontend app
