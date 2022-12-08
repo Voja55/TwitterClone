@@ -64,7 +64,7 @@ func (sr *TweetRepoCassandraDb) CreateTables() {
 	err := sr.session.Query(
 		fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s 
 					(username text, tweet_id UUID, text text, 
-					PRIMARY KEY (username)) `,
+					PRIMARY KEY (username, tweet_id)) `,
 			"tweet_by_user")).Exec()
 	if err != nil {
 		sr.logger.Println(err)
