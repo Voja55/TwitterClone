@@ -39,11 +39,11 @@ export class TweetService {
     }, this.options())
   }
 
-  likeTweet(tweet : Tweet) {
-    console.log(tweet)
+  likeTweet(username : string, tweet_id : number) {
+    console.log(username)
     return this.client.post<unknown>(environment.apiUrl + "tweet_service/tweets/likes", {
-      tweetId: tweet.tweetId,
-      username: tweet.username,
+      tweetId: tweet_id,
+      username: username,
     }, this.options())
   }
 

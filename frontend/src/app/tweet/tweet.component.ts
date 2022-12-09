@@ -31,8 +31,8 @@ export class TweetComponent implements OnInit {
   }
 
   likeTweet(){
-    this.tweet.username = this.store.getUsername();
-    this.tweetService.likeTweet(this.tweet).subscribe(data => {
+    //this.tweet.username = this.store.getUsername();
+    this.tweetService.likeTweet(this.store.getUsername(), this.tweet.tweetId).subscribe(data => {
       console.log(data);
       this.getLikes()
     })
