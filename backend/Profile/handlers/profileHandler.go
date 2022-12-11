@@ -46,12 +46,13 @@ func (p *ProfileHandler) GetProfile(rw http.ResponseWriter, h *http.Request) {
 func (p *ProfileHandler) CreateNormalProfile(rw http.ResponseWriter, h *http.Request) {
 	profile := h.Context().Value(KeyProfile{}).(*data.Profile)
 
-	if profile.ID == "" || profile.Name == "" || profile.Surname == "" || profile.Address == "" {
+	if profile.ID == "" || profile.FirstName == "" || profile.LastName == "" || profile.Address == "" ||
+		profile.Username == "" || profile.Age == 0 {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 	_, err := p.profileRepo.GetProfile(profile.ID)
-	if err != nil {
+	if err == nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
@@ -73,13 +74,14 @@ func (p *ProfileHandler) CreateNormalProfile(rw http.ResponseWriter, h *http.Req
 func (p *ProfileHandler) CreateBusinessProfile(rw http.ResponseWriter, h *http.Request) {
 	profile := h.Context().Value(KeyProfile{}).(*data.Profile)
 
-	if profile.ID == "" || profile.CompanyName == "" || profile.WebSite == "" {
+	if profile.ID == "" || profile.CompanyName == "" || profile.WebSite == "" || profile.Email == "" ||
+		profile.Username == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
 	_, err := p.profileRepo.GetProfile(profile.ID)
-	if err != nil {
+	if err == nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}

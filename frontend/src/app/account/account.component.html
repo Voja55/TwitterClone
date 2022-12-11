@@ -125,11 +125,8 @@
                             Code is required
                         </div>
                     </div>
-                </div>
-                    
+                </div>   
             </div>
-    
-            <br/>
 
             <div class="row">      
                 <div class="col-md-10 offset-md-1">
@@ -142,9 +139,15 @@
 </div>
 <br/>
 
-<div *ngFor="let tweet of tweets | async; index as i; first as isFirst">
-    <app-tweet [tweet] = "tweet"></app-tweet>
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div *ngFor="let tweet of tweets | async; index as i; first as isFirst">
+            <app-tweet [tweet] = "tweet"></app-tweet>
+        </div>
+    </div>
 </div>
+
+
 
 
 

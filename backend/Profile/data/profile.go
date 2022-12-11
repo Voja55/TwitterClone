@@ -3,19 +3,20 @@ package data
 import (
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
 	"io"
 )
 
 type Profile struct {
 	ID          string  `json:"id"`
-	Name        string  `json:"name"`
-	Surname     string  `json:"surname"`
+	Username    string  `json:"username"`
+	FirstName   string  `json:"firstName"`
+	LastName    string  `json:"lastName"`
 	Address     string  `json:"address"`
 	Gender      EGender `json:"gender"`
 	Age         int     `json:"age"`
-	CompanyName string  `json:"company_name"`
-	WebSite     string  `json:"web_site"`
+	CompanyName string  `json:"companyName"`
+	WebSite     string  `json:"webSite"`
+	Email       string  `json:"email"`
 	Private     bool    `json:"private"`
 }
 
@@ -44,9 +45,4 @@ func (p *Profile) ToBson() (doc *bson.D, err error) {
 
 	err = bson.Unmarshal(data, &doc)
 	return
-}
-
-func (p *Profile) HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
 }

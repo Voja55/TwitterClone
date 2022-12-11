@@ -46,11 +46,11 @@ func main() {
 	getProfileRouter.HandleFunc("/profile/{id}", profileHandler.GetProfile)
 
 	postProfileRouter := routerProfile.Methods(http.MethodPost).Subrouter()
-	postProfileRouter.HandleFunc("/create_normal", profileHandler.CreateNormalProfile)
+	postProfileRouter.HandleFunc("/regular", profileHandler.CreateNormalProfile)
 	postProfileRouter.Use(profileHandler.MiddlewareUsersValidation)
 
 	postBusinessRouter := routerProfile.Methods(http.MethodPost).Subrouter()
-	postBusinessRouter.HandleFunc("/create_business", profileHandler.CreateBusinessProfile)
+	postBusinessRouter.HandleFunc("/business", profileHandler.CreateBusinessProfile)
 	postBusinessRouter.Use(profileHandler.MiddlewareUsersValidation)
 
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"https://localhost:4200/"}))
