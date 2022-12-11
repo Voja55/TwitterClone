@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	logger := log.New(os.Stdout, "[auth-api] ", log.LstdFlags)
+	logger := log.New(os.Stdout, "[profile-api] ", log.LstdFlags)
 
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -43,7 +43,7 @@ func main() {
 	routerProfile.Use(profileHandler.MiddlewareContentTypeSet)
 
 	getProfileRouter := routerProfile.Methods(http.MethodGet).Subrouter()
-	getProfileRouter.HandleFunc("/profile", profileHandler.GetProfile)
+	getProfileRouter.HandleFunc("/profile/{id}", profileHandler.GetProfile)
 
 	postProfileRouter := routerProfile.Methods(http.MethodPost).Subrouter()
 	postProfileRouter.HandleFunc("/create_normal", profileHandler.CreateNormalProfile)
