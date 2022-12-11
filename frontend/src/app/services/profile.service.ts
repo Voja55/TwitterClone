@@ -24,19 +24,23 @@ export class ProfileService {
     return this.client.get<Profile>(environment.apiUrl + "profile_service/profile/" + username)
   }
 
-  regUserRegular(username: string, password: string, email : string) {
+  regUserRegular(username: string, firstName: string, lastName : string, address : string, age : number, gender : boolean) {
     return this.client.post<unknown>(environment.apiUrl + "profile_service/regular", {
       username: username,
-      password: password,
-      email : email,
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      age: age,
+      gender: gender
     }, this.options())
   }
 
-  regUserBusiness(username: string, password: string, email : string) {
+  regUserBusiness(username: string, email : string, companyName: string, webSite: string) {
     return this.client.post<unknown>(environment.apiUrl + "profile_service/business", {
       username: username,
-      password: password,
-      email : email,
+      email: email,
+      companyName: companyName,
+      webSite: webSite
     }, this.options())
   }
 }

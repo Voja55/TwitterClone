@@ -7,16 +7,16 @@ import (
 )
 
 type Profile struct {
-	Username    string  `json:"username"`
-	FirstName   string  `json:"firstName"`
-	LastName    string  `json:"lastName"`
-	Address     string  `json:"address"`
-	Gender      EGender `json:"gender"`
-	Age         int     `json:"age"`
-	CompanyName string  `json:"companyName"`
-	WebSite     string  `json:"webSite"`
-	Email       string  `json:"email"`
-	Private     bool    `json:"private"`
+	Username    string `json:"username"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Address     string `json:"address"`
+	Gender      bool   `json:"gender"`
+	Age         int    `json:"age"`
+	CompanyName string `json:"companyName"`
+	WebSite     string `json:"webSite"`
+	Email       string `json:"email"`
+	Private     bool   `json:"private"`
 }
 
 type Profiles []*Profile
