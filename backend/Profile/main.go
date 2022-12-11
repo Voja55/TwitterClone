@@ -43,7 +43,7 @@ func main() {
 	routerProfile.Use(profileHandler.MiddlewareContentTypeSet)
 
 	getProfileRouter := routerProfile.Methods(http.MethodGet).Subrouter()
-	getProfileRouter.HandleFunc("/profile/{id}", profileHandler.GetProfile)
+	getProfileRouter.HandleFunc("/profile/{username}", profileHandler.GetProfile)
 
 	postProfileRouter := routerProfile.Methods(http.MethodPost).Subrouter()
 	postProfileRouter.HandleFunc("/regular", profileHandler.CreateNormalProfile)

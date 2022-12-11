@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { Profile } from '../model/profile';
 import { Tweet } from '../model/tweet';
 import { User } from '../model/user';
+import { ProfileService } from '../services/profile.service';
 import { StoreService } from '../services/store-service.service';
 import { TweetService } from '../services/tweet.service';
 import { UserService } from '../services/user-service.service';
@@ -13,19 +15,15 @@ import { UserService } from '../services/user-service.service';
 })
 export class AccountComponent implements OnInit {
 
-  constructor(public store : StoreService, private userService : UserService, private tweetService : TweetService) { }
+  constructor(public store : StoreService, private userService : UserService, private tweetService : TweetService, private profileService : ProfileService) { }
 
   ngOnInit(): void {
     this.getTweets()
+    this.getProfile()
   }
 
   user : User = new User();
-  statusDisplayName : boolean = false;
-  statusDescription : any;
-  statusPassword : any;
-  changeDescription(){}
-  changeDisplayName(){}
-  changePassword(){}
+  profile : Profile = new Profile();
 
   confirm() {
     console.log(this.store.getUsername());
@@ -42,5 +40,11 @@ export class AccountComponent implements OnInit {
     this.tweets = this.tweetService.getTweetsByUser(this.store.getUsername())
   }
 
+  getProfile() {
+    this.profileService.getAccount(this.store.getUsername()).subscribe(data => {
+      console.log(data);
+      this.profile = data;
+    })
+  }
   
 }

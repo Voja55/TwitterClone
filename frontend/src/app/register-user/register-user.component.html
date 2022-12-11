@@ -95,7 +95,7 @@
                         <div class="col-md-10 offset-md-1">
                               <div class="form-group">
                                     <label for="age">Age</label>
-                                    <input type="text" class="form-control gray" id="age" required
+                                    <input type="number" class="form-control gray" id="age" required
                                           [(ngModel)]="user.age" name="age"
                                           #age="ngModel">
                                     <div [hidden]="age.valid || !age.touched"

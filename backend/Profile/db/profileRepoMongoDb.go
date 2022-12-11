@@ -79,16 +79,16 @@ func (p ProfileRepoMongoDb) CreateProfile(dp *data.Profile) bool {
 		return false
 	}
 
-	p.logger.Printf("Registered user with _id: %v\n", result.InsertedID)
+	p.logger.Printf("Registered user : %v\n", result.InsertedID)
 	return true
 }
 
-func (p ProfileRepoMongoDb) GetProfile(id string) (data.Profile, error) {
-	p.logger.Printf("Getting user ", id)
+func (p ProfileRepoMongoDb) GetProfile(username string) (data.Profile, error) {
+	p.logger.Printf("Getting user ", username)
 	var result data.Profile
 
 	coll := p.getCollection()
-	filter := bson.D{{"id", id}}
+	filter := bson.D{{"username", username}}
 	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 
 	if err != nil {

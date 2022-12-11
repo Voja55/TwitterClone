@@ -22,9 +22,9 @@ func NewProfileHandler(l *log.Logger, ur db.ProfileRepo) *ProfileHandler {
 
 func (p *ProfileHandler) GetProfile(rw http.ResponseWriter, h *http.Request) {
 	vars := mux.Vars(h)
-	id := vars["id"]
+	username := vars["username"]
 
-	user, er := p.profileRepo.GetProfile(id)
+	user, er := p.profileRepo.GetProfile(username)
 
 	if er != nil {
 		http.Error(rw, er.Error(), http.StatusNotFound)
@@ -46,12 +46,12 @@ func (p *ProfileHandler) GetProfile(rw http.ResponseWriter, h *http.Request) {
 func (p *ProfileHandler) CreateNormalProfile(rw http.ResponseWriter, h *http.Request) {
 	profile := h.Context().Value(KeyProfile{}).(*data.Profile)
 
-	if profile.ID == "" || profile.FirstName == "" || profile.LastName == "" || profile.Address == "" ||
+	if profile.FirstName == "" || profile.LastName == "" || profile.Address == "" ||
 		profile.Username == "" || profile.Age == 0 {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-	_, err := p.profileRepo.GetProfile(profile.ID)
+	_, err := p.profileRepo.GetProfile(profile.Username)
 	if err == nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
@@ -74,13 +74,13 @@ func (p *ProfileHandler) CreateNormalProfile(rw http.ResponseWriter, h *http.Req
 func (p *ProfileHandler) CreateBusinessProfile(rw http.ResponseWriter, h *http.Request) {
 	profile := h.Context().Value(KeyProfile{}).(*data.Profile)
 
-	if profile.ID == "" || profile.CompanyName == "" || profile.WebSite == "" || profile.Email == "" ||
+	if profile.CompanyName == "" || profile.WebSite == "" || profile.Email == "" ||
 		profile.Username == "" {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
-	_, err := p.profileRepo.GetProfile(profile.ID)
+	_, err := p.profileRepo.GetProfile(profile.Username)
 	if err == nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
