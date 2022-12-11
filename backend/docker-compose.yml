@@ -15,6 +15,8 @@ services:
         condition: service_healthy
       auth_service:
         condition: service_healthy
+      profile_service:
+        condition: service_healthy
 
   auth_service:
     image: auth_service
@@ -50,6 +52,23 @@ services:
       tweet_db:
         condition: service_healthy
 
+  profile_service:
+    image: profile_service
+    build:
+      context: .
+      dockerfile: ./Profile/Dockerfile
+    restart: always
+    container_name: 'profile_service'
+    hostname: 'profile_service'
+    environment:
+      - MONGO_DB_URI=mongodb://profile_db:27017
+      - app_port=${PROFILE_SERVICE_PORT}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+    depends_on:
+      profile_db:
+        condition: service_healthy
+
   auth_db:
     image: mongo
     restart: always
@@ -60,8 +79,17 @@ services:
       test: echo 'db.runCommand("ping").ok'
     volumes:
       - mongo_store:/data/mongoAuth
-    ports:
-      - 27017:27017
+
+  profile_db:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: mongoDemo
+    # Docker healtcheck - checks if database is "alive"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+    volumes:
+      - mongo_store:/data/mongoProfile
 
   tweet_db:
     image: cassandra

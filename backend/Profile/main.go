@@ -4,6 +4,7 @@ import (
 	"Profile/db"
 	"Profile/handlers"
 	"context"
+	gorillaHandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -14,7 +15,7 @@ import (
 )
 
 func main() {
-	logger := log.New(os.Stdout, "[auth-api] ", log.LstdFlags)
+	logger := log.New(os.Stdout, "[profile-api] ", log.LstdFlags)
 
 	timeoutContext, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -25,37 +26,41 @@ func main() {
 	}
 
 	// NoSQL: Initialize Product Repository store
-	userRepo, err := db.NewUserRepoDB(timeoutContext, logger)
+	profileRepo, err := db.NewProfileRepoDB(timeoutContext, logger)
 	if err != nil {
 		logger.Fatal(err)
 	}
-	defer userRepo.Disconnect(timeoutContext)
+	defer profileRepo.Disconnect(timeoutContext)
 
 	// NoSQL: Checking if the connection was established
-	userRepo.Ping()
+	profileRepo.Ping()
 
 	//Initialize the handler and inject said logger
-	usersHandler := handlers.NewUsersHandler(logger, userRepo)
+	profileHandler := handlers.NewProfileHandler(logger, profileRepo)
 
 	//Initialize the router and add a middleware for all the requests
-	routerUser := mux.NewRouter()
-	routerUser.Use(usersHandler.MiddlewareContentTypeSet)
+	routerProfile := mux.NewRouter()
+	routerProfile.Use(profileHandler.MiddlewareContentTypeSet)
 
-	getUsersRouter := routerUser.Methods(http.MethodGet).Subrouter()
-	getUsersRouter.HandleFunc("/profile", usersHandler.GetProfile)
+	getProfileRouter := routerProfile.Methods(http.MethodGet).Subrouter()
+	getProfileRouter.HandleFunc("/profile/{id}", profileHandler.GetProfile)
 
-	postUserRouter := routerUser.Methods(http.MethodPost).Subrouter()
-	postUserRouter.HandleFunc("/profile", usersHandler.Register)
-	postUserRouter.Use(usersHandler.MiddlewareUsersValidation)
+	postProfileRouter := routerProfile.Methods(http.MethodPost).Subrouter()
+	postProfileRouter.HandleFunc("/create_normal", profileHandler.CreateNormalProfile)
+	postProfileRouter.Use(profileHandler.MiddlewareUsersValidation)
+
+	postBusinessRouter := routerProfile.Methods(http.MethodPost).Subrouter()
+	postBusinessRouter.HandleFunc("/create_business", profileHandler.CreateBusinessProfile)
+	postBusinessRouter.Use(profileHandler.MiddlewareUsersValidation)
 
 	cors := gorillaHandlers.CORS(gorillaHandlers.AllowedOrigins([]string{"https://localhost:4200/"}))
 
 	server := http.Server{
-		Addr:         ":" + port,        // Addr optionally specifies the TCP address for the server to listen on, in the form "host:port". If empty, ":http" (port 80) is used.
-		Handler:      cors(routerUser),  // handler to invoke, http.DefaultServeMux if nil
-		IdleTimeout:  120 * time.Second, // IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled.
-		ReadTimeout:  2 * time.Second,   // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
-		WriteTimeout: 2 * time.Second,   // WriteTimeout is the maximum duration before timing out writes of the response.
+		Addr:         ":" + port,          // Addr optionally specifies the TCP address for the server to listen on, in the form "host:port". If empty, ":http" (port 80) is used.
+		Handler:      cors(routerProfile), // handler to invoke, http.DefaultServeMux if nil
+		IdleTimeout:  120 * time.Second,   // IdleTimeout is the maximum amount of time to wait for the next request when keep-alives are enabled.
+		ReadTimeout:  2 * time.Second,     // ReadTimeout is the maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout.
+		WriteTimeout: 2 * time.Second,     // WriteTimeout is the maximum duration before timing out writes of the response.
 	}
 
 	logger.Println("Server listening on port", port)

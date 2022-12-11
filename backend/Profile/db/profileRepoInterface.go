@@ -2,7 +2,7 @@ package db
 
 import "Profile/data"
 
-type UserRepo interface {
-	GetProfile(id int) (data.Profile, error)
+type ProfileRepo interface {
+	GetProfile(id string) (data.Profile, error)
 	CreateProfile(p *data.Profile) bool
 }

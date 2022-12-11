@@ -69,7 +69,18 @@ func (p *ProfileRepoMongoDb) Ping() {
 }
 
 func (p ProfileRepoMongoDb) CreateProfile(dp *data.Profile) bool {
-	return false
+	p.logger.Println("Creating profile...")
+	coll := p.getCollection()
+
+	profile, err := dp.ToBson()
+	result, err := coll.InsertOne(context.TODO(), profile)
+	if err != nil {
+		p.logger.Println(err)
+		return false
+	}
+
+	p.logger.Printf("Registered user with _id: %v\n", result.InsertedID)
+	return true
 }
 
 func (p ProfileRepoMongoDb) GetProfile(id string) (data.Profile, error) {
@@ -82,7 +93,7 @@ func (p ProfileRepoMongoDb) GetProfile(id string) (data.Profile, error) {
 
 	if err != nil {
 		p.logger.Println(err)
-		return result, errors.New("couldn't find user")
+		return result, errors.New("couldn't find profile")
 	}
 
 	return result, nil

@@ -8,13 +8,15 @@ import (
 )
 
 type Profile struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Surname string `json:"surname"`
-	Gender     EGender   `json:"gender"`
-	Age int `json:"age"`
-	Email string `json:"email"`
-	Private bool `json:"private"`
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Surname     string  `json:"surname"`
+	Address     string  `json:"address"`
+	Gender      EGender `json:"gender"`
+	Age         int     `json:"age"`
+	CompanyName string  `json:"company_name"`
+	WebSite     string  `json:"web_site"`
+	Private     bool    `json:"private"`
 }
 
 type Profiles []*Profile
