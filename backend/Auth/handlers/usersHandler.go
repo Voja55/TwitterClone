@@ -14,6 +14,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type KeyUser struct{}
@@ -41,6 +42,12 @@ type Jwt struct {
 type PasswordReset struct {
 	Token    string `json:"token"`
 	Password string `json:"password"`
+}
+
+type ChangePassword struct {
+	Username string `json:"username"`
+	OldPassword  string `json:"oldPassword"`
+	NewPassword  string `json:"newPassword"`
 }
 
 var jwtKey = []byte("secret_key")
@@ -146,10 +153,7 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 			return
 		}
 		if u.userRepo.Register(user) {
-			_, err = SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
-			if err != nil {
-				u.logger.Println("Failed to email", err)
-			}
+			go SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
 			rw.WriteHeader(http.StatusAccepted)
 			return
 		}
@@ -216,11 +220,7 @@ func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Re
 	//TODO zameni base64 sa nekom vrstom sifrovanja
 	//TODO Link ka frontu da bude env promenljiva
 	encoded := base64.StdEncoding.EncodeToString([]byte(user.Email))
-	_, err1 := SendMail(user.Email, "Reset password", "https://localhost:4200/resetPass?id="+encoded)
-	if err1 != nil {
-		rw.WriteHeader(http.StatusNotAcceptable)
-		return
-	}
+	go SendMail(user.Email, "Reset password", "https://localhost:4200/resetPass?id="+encoded)
 	rw.WriteHeader(http.StatusAccepted)
 	rw.Write([]byte("202 - Accepted"))
 }
@@ -263,6 +263,50 @@ func (u *UsersHandler) ResetPassword(rw http.ResponseWriter, req *http.Request) 
 		return
 	}
 	rw.WriteHeader(http.StatusAccepted)
+}
+
+func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var data ChangePassword
+	err := decoder.Decode(&data)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		u.logger.Println("Unable to convert to json :", err)
+		return
+	}
+	u.logger.Println(data)
+
+	user, err := u.userRepo.GetUserByUsername(data.Username)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusNotFound)
+		u.logger.Println("Unable to find user.", err)
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.OldPassword))
+
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusNotAcceptable)
+		u.logger.Println("Passwords do not match.", err)
+		return
+	}
+
+	hashedPass, err := user.HashPassword(data.NewPassword)
+	if err != nil {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	
+	user.Password = hashedPass
+
+	if !u.userRepo.UpdateUser(&user) {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	rw.WriteHeader(http.StatusAccepted)
+
+
 }
 
 //Middleware to try and decode the incoming body. When decoded we run the validation on it just to check if everything is okay

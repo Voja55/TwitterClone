@@ -20,6 +20,7 @@ import { LogOutComponent } from './log-out/log-out.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { RequestResetPageComponent } from './request-reset-page/request-reset-page.component';
 import { ResetPasswordPageComponent } from './reset-password-page/reset-password-page.component';
+import { ChangePassPageComponent } from './change-pass-page/change-pass-page.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { ResetPasswordPageComponent } from './reset-password-page/reset-password
     TweetComponent,
     LogOutComponent,
     RequestResetPageComponent,
-    ResetPasswordPageComponent
+    ResetPasswordPageComponent,
+    ChangePassPageComponent
   ],
   imports: [
     BrowserModule,

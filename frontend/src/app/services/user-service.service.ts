@@ -50,10 +50,18 @@ export class UserService {
     }, this.options())
   }
 
-  changePassAuth(token: string, password: string){
+  resetPassAuth(token: string, password: string){
     return this.client.post<unknown>(environment.apiUrl + "auth_service/reset", {
       token: token,
       password: password
+    })
+  }
+
+  changePassAuth(username: string, oldPassword: string, newPassword: string){
+    return this.client.post<unknown>(environment.apiUrl + "auth_service/changepass", {
+        username: username,
+        oldPassword: oldPassword,
+        newPassword: newPassword
     })
   }
 

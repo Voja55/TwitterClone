@@ -45,6 +45,13 @@
         </div>
 
         <br/>
+
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <button type="button" class="btn btn-primary" (click)="redirectToChangePass()">Change password</button>
+            </div>
+        </div>
+
         <br/>
 
         <form #userForm="ngForm">
@@ -58,8 +65,9 @@
                         #code="ngModel">
                         <div [hidden]="code.valid ||!code.touched"
                             class="alert alert-danger">
-                            Code is required
+                            Code is required.
                         </div>
+                        <a href="#">Resend confirmation code.</a>
                     </div>
                 </div>       
             </div>
@@ -109,6 +117,13 @@
         </div>
 
         <br/>
+
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <button type="button" class="btn btn-primary" (click)="redirectToChangePass()">Change password</button>
+            </div>
+        </div>
+
         <br/>
 
         <form #userForm="ngForm">
@@ -124,6 +139,7 @@
                             class="alert alert-danger">
                             Code is required
                         </div>
+                        <a href="#">Resend confirmation code.</a>
                     </div>
                 </div>   
             </div>

@@ -32,7 +32,7 @@ export class ResetPasswordPageComponent {
 
     this.route.queryParams.subscribe(params => {
       let token = params['id'];
-      this.userService.changePassAuth(token, password).subscribe( data => {
+      this.userService.resetPassAuth(token, password).subscribe( data => {
         this.router.navigateByUrl("/login");
       })
     })

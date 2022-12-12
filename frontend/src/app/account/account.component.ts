@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
 import { Profile } from '../model/profile';
 import { Tweet } from '../model/tweet';
@@ -15,7 +16,7 @@ import { UserService } from '../services/user-service.service';
 })
 export class AccountComponent implements OnInit {
 
-  constructor(public store : StoreService, private userService : UserService, private tweetService : TweetService, private profileService : ProfileService) { }
+  constructor(public store : StoreService, private userService : UserService, private tweetService : TweetService, private profileService : ProfileService, private router: Router) { }
 
   ngOnInit(): void {
     this.getTweets()
@@ -45,6 +46,10 @@ export class AccountComponent implements OnInit {
       console.log(data);
       this.profile = data;
     })
+  }
+
+  redirectToChangePass() {
+    this.router.navigateByUrl("/changePass")
   }
   
 }

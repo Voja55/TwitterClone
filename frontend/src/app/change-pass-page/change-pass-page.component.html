@@ -1,0 +1,53 @@
+<br />
+<div class="container">
+    <form [formGroup]="formData" (submit)="changePass()">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="form-group">
+                    <label for="password">Old password</label>
+                    <input type="password" class="form-control" id="oldPassword" required name="password"
+                        formControlName="oldPassword"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[,@$!._?&-])[A-Za-z\d,@$!._?&-]{8,}$">
+                    <div [hidden]="formData.valid" class="alert alert-danger">
+                        Old password is required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="form-group">
+                    <label for="password">New password</label>
+                    <input type="password" class="form-control" id="newPassword" required name="password"
+                        formControlName="newPassword" #passwordField
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[,@$!._?&-])[A-Za-z\d,@$!._?&-]{8,}$">
+                    <div [hidden]="formData.valid" class="alert alert-danger">
+                        New password is required, and must include one uppercase letter, one lower case letter, one special
+                        symbol and one number
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="form-group">
+                    <label for="password">Repeat password</label>
+                    <input type="password" class="form-control" id="repeatPassword" required name="repeatPassword"
+                        formControlName="repeatPassword" #repeatPasswordField>
+                    <div [hidden]="passwordField.value == repeatPasswordField.value" class="alert alert-danger">
+                        Passwords must match
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <button type="submit" class="btn btn-success btn-block" [disabled]="!formData.valid">Change
+                    password</button>
+            </div>
+        </div>
+
+        <br />
+    </form>
+
+</div>
