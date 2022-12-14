@@ -51,5 +51,11 @@ export class AccountComponent implements OnInit {
   redirectToChangePass() {
     this.router.navigateByUrl("/changePass")
   }
+
+  resend() {
+    this.userService.resendCCodeAuth(this.store.getUsername()).subscribe(data => {
+        console.log(data)
+    })
+  }
   
 }

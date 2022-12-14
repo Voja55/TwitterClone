@@ -65,4 +65,10 @@ export class UserService {
     })
   }
 
+  resendCCodeAuth(username: string){
+    return this.client.post<unknown>(environment.apiUrl + "auth_service/resend", {
+        username: username
+    })
+  }
+
 }

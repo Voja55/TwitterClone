@@ -45,9 +45,13 @@ type PasswordReset struct {
 }
 
 type ChangePassword struct {
-	Username string `json:"username"`
+	Username 	 string `json:"username"`
 	OldPassword  string `json:"oldPassword"`
 	NewPassword  string `json:"newPassword"`
+}
+
+type ResendCCode struct {
+	Username string `json:"username"`
 }
 
 var jwtKey = []byte("secret_key")
@@ -157,10 +161,6 @@ func (u *UsersHandler) Register(rw http.ResponseWriter, h *http.Request) {
 			rw.WriteHeader(http.StatusAccepted)
 			return
 		}
-		if u.userRepo.Register(user) == true {
-			rw.WriteHeader(http.StatusAccepted)
-			return
-		}
 	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
@@ -177,8 +177,8 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	u.logger.Println(data)
-
-	user, err := u.userRepo.GetUser(data.Username)
+	//TODO proveri da li radi confirm jer se nalazi user po id a salje se usename
+	user, err := u.userRepo.GetUserByUsername(data.Username)
 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusNotFound)
@@ -292,6 +292,7 @@ func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request)
 		return
 	}
 
+
 	hashedPass, err := user.HashPassword(data.NewPassword)
 	if err != nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
@@ -304,6 +305,34 @@ func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request)
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
+	rw.WriteHeader(http.StatusAccepted)
+}
+
+func (u *UsersHandler) ResendCCode(rw http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+	var data ResendCCode
+	err := decoder.Decode(&data)
+
+	if err != nil {
+		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
+		u.logger.Println("Unable to convert to json :", err)
+		return
+	}
+	u.logger.Println(data)
+
+	user, err := u.userRepo.GetUserByUsername(data.Username)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusNotFound)
+		u.logger.Println("Unable to find user.", err)
+		return
+	}
+
+	if user.CCode == 0 {
+		u.logger.Println("User already confirmed.")
+		return
+	}
+
+	go SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
 	rw.WriteHeader(http.StatusAccepted)
 
 

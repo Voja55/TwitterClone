@@ -85,6 +85,9 @@ func main() {
 	changePasswordRouter := routerUser.Methods(http.MethodPost).Subrouter()
 	changePasswordRouter.HandleFunc("/changepass", usersHandler.ChangePassword)
 
+	resendCCodeRouter := routerUser.Methods(http.MethodPost).Subrouter()
+	resendCCodeRouter.HandleFunc("/resend", usersHandler.ResendCCode)
+
 	//Set cors. Generally you wouldn't like to set cors to a "*". It is a wildcard and it will match any source.
 	//Normally you would set this to a set of ip's you want this api to serve. If you have an associated frontend app
 	//you would put the ip of the server where the frontend is running. The only time you don't need cors is when you
