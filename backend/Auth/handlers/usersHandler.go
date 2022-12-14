@@ -29,8 +29,9 @@ type LogUser struct {
 }
 
 type Claims struct {
-	Username string `json:"username"`
-	Role     string `json:"role"`
+	Username  string `json:"username"`
+	Role      string `json:"role"`
+	Confirmed bool   `json:"CCode"`
 	jwt.StandardClaims
 }
 
@@ -105,12 +106,17 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		validate := false
+		if logged.CCode == 0 {
+			validate = true
+		}
 
 		expirationTime := time.Now().Add(time.Minute * 5)
 
 		claims := &Claims{
-			Username: logged.Username,
-			Role:     string(logged.Role),
+			Username:  logged.Username,
+			Role:      string(logged.Role),
+			Confirmed: validate,
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: expirationTime.Unix(),
 			},
