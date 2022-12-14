@@ -284,6 +284,12 @@ func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request)
 		return
 	}
 
+	if !validation.ValidateUsername(user.Username) || !validation.ValidatePassword(user.Password) || !validation.ValidateRole(string(user.Role)) || !validation.BlackList(user.Password) {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		u.logger.Println("Did not pass validation.")
+		return
+	}
+
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.OldPassword))
 
 	if err != nil {

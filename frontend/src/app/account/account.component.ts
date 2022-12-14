@@ -54,6 +54,7 @@ export class AccountComponent implements OnInit {
 
   resend() {
     this.userService.resendCCodeAuth(this.store.getUsername()).subscribe(data => {
+        alert("check you email")
         console.log(data)
     })
   }

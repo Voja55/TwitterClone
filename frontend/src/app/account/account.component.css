@@ -1,0 +1,8 @@
+#resendCCode {
+    color: skyblue;
+}
+
+#resendCCode:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
