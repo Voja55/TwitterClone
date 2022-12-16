@@ -54,7 +54,7 @@
 
         <br/>
 
-        <form #userForm="ngForm">
+        <form #userForm="ngForm"  *ngIf="store.getConfirmed() == false">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
@@ -126,7 +126,7 @@
 
         <br/>
 
-        <form #userForm="ngForm">
+        <form #userForm="ngForm" *ngIf="store.getConfirmed() == false">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-10 offset-md-1">
@@ -154,6 +154,12 @@
     </div>
 </div>
 <br/>
+
+<div class="row">
+    <div class="col-md-10 offset-md-4">
+        <h2>{{err}}</h2>
+    </div>   
+</div>
 
 <div class="row">
     <div class="col-md-10 offset-md-1">

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Token } from '@angular/compiler';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Jwt } from '../model/jwt';
 
@@ -37,8 +38,8 @@ export class UserService {
     }, this.options())
   }
 
-  confirmAuth(username: string, code: number){
-    return this.client.post<Jwt>(environment.apiUrl + "auth_service/confirm", {
+  confirmAuth(username: string, code: number) : Observable<any>{
+    return this.client.post<any>(environment.apiUrl + "auth_service/confirm", {
       username: username,
       ccode: code
     }, this.options())

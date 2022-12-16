@@ -25,14 +25,22 @@ export class AccountComponent implements OnInit {
 
   user : User = new User();
   profile : Profile = new Profile();
+  err! : string;
 
   confirm() {
     console.log(this.store.getUsername());
     this.user.username = this.store.getUsername();
     let codeField = document.getElementById("code") as HTMLInputElement;
-    this.userService.confirmAuth(this.user.username, +codeField.value).subscribe(data => {
-      console.log(data);
-    })
+    this.userService.confirmAuth(this.user.username, +codeField.value).subscribe(
+      (data) => {
+        this.router.navigateByUrl("/logOut") 
+        console.log(data.status)
+      },
+      error => {
+        console.log(error.status)
+        this.err = "Wrong confirmation code"
+      }
+    );
   }
 
   tweets!: Observable<Tweet[]>;
