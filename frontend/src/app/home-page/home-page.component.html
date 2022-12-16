@@ -1,5 +1,5 @@
 <br/>
-<app-tweet-popup *ngIf="store.getLoginStatus() == true"></app-tweet-popup>
+<app-tweet-popup *ngIf="store.getLoginStatus() == true && store.getConfirmed() == true"></app-tweet-popup>
 <br/>
 <app-tweets></app-tweets>
 

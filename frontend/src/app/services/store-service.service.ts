@@ -13,9 +13,11 @@ export class StoreService{
       this.decodedToken = this.getDecodedAccessToken(t)
       this.role = this.decodedToken.role;   
       this.username = this.decodedToken.username;
+      this.CCode = this.decodedToken.CCode;
       console.log(this.decodedToken)
       console.log(this.username)
       console.log(this.role)
+      console.log(this.CCode)
     }
     else {
       this.loginStatus = false;
@@ -31,6 +33,8 @@ export class StoreService{
   private role : string = "";
 
   private username : string = "";
+
+  private CCode : boolean = false
 
   getToken(): string | null {
     return this.token
@@ -48,6 +52,10 @@ export class StoreService{
     return this.role
   }
 
+  getConfirmed(): boolean{
+    return this.CCode
+  }
+
   login(token: string) {
     sessionStorage.setItem('jwt', token)
     this.token = token;
@@ -56,9 +64,11 @@ export class StoreService{
     this.decodedToken = this.getDecodedAccessToken(this.token);
     this.role = this.decodedToken.role;
     this.username = this.decodedToken.username;
+    this.CCode = this.decodedToken.CCode;
 
     console.log(this.username);
     console.log(this.role);
+    console.log(this.CCode)
   }
 
   logout() {
@@ -67,6 +77,7 @@ export class StoreService{
     this.decodedToken = null;
     this.role = ""
     this.username = ""
+    this.CCode = false
     this.token = null   
   }
 
