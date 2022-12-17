@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tweet } from '../model/tweet';
 import { TweetLikes } from '../model/tweetLikes';
 import { StoreService } from '../services/store-service.service';
@@ -12,7 +13,7 @@ import { TweetService } from '../services/tweet.service';
 })
 export class TweetComponent implements OnInit {
 
-  constructor(public store : StoreService, private tweetService : TweetService, private router : Router) {
+  constructor(private modalService: NgbModal, public store : StoreService, private tweetService : TweetService, private router : Router) {
     
   }
 
@@ -22,6 +23,8 @@ export class TweetComponent implements OnInit {
 
   @Input()
   tweet! : Tweet
+
+  users! : string[];
 
   getLikes() {
     this.tweetService.getLikes(this.tweet).subscribe(data => {
@@ -40,6 +43,19 @@ export class TweetComponent implements OnInit {
 
   redirect() {
     this.router.navigateByUrl("/login");
+  }
+
+  openLg(content : any) {
+    this.getLikeUsers()
+    this.modalService.open(content, { size: 'lg' });
+
+  }
+
+  getLikeUsers() {
+    this.tweetService.getLikeUsers(this.tweet.tweetId).subscribe(data => {
+      console.log(data)
+      this.users = data
+    })
   }
 
 }

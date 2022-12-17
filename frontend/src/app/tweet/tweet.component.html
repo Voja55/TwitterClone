@@ -21,8 +21,8 @@
                         <button type="button" class="btn btn-primary"(click)="likeTweet()" *ngIf="store.getLoginStatus() == true">Like</button>
                         <button type="button" class="btn btn-primary"(click)="redirect()" *ngIf="store.getLoginStatus() == false">Like</button>
                     </div> 
-                    <div class="col-md-1"style="margin-top: 25px;">
-                        <p class="card-text" style="color: white;">{{tweet.likes}}</p>
+                    <div class="col-md-1"style="margin-top: 23px;">
+                        <h4 class="card-text likeNumber" (click)="openLg(content)">{{tweet.likes}}</h4>
                     </div>            
                 </div>          
             </div>
@@ -31,3 +31,18 @@
     </div>
 </div>
 <br/>
+<ng-template class="popup" #content let-modal>
+    <div class="modal-header">
+        <h2>Likes</h2> 
+      <button type="button" class="btn" (click)="modal.dismiss('Close click')">X</button>
+    </div>
+    <div class="modal-body">
+      <div class="containter">
+        <div *ngFor="let user of users; index as i; first as isFirst">
+            <div>
+                <h3 style="margin-bottom: 10px;">{{user}}</h3>
+            </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>

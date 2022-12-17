@@ -51,5 +51,10 @@ export class TweetService {
     console.log(tweet)
     return this.client.get<TweetLikes>(environment.apiUrl + "tweet_service/tweets/likes/" + tweet.tweetId)
   }
+
+  getLikeUsers(id : number) : Observable<any>{
+    console.log(environment.apiUrl + "tweet_service/tweets/likes/users/" + id)
+    return this.client.get<any>(environment.apiUrl + "tweet_service/tweets/likes/users/" + id)
+  }
   
 }
