@@ -147,6 +147,31 @@ func (t *TweetRepoCassandraDb) GetLikes(id gocql.UUID) (int, error) {
 	return result, nil
 }
 
+func (t *TweetRepoCassandraDb) GetLikesUsers(id gocql.UUID) (data.LikesUsers, error) {
+	t.logger.Printf("Getting likes for tweet%v\n", id)
+	scanner := t.session.Query(`SELECT tweet_id, username, liked FROM user_by_tweet WHERE tweet_id = ?`, id).Iter().Scanner()
+
+	var result []string
+	for scanner.Next() {
+		var like data.Like
+		err := scanner.Scan(&like.TweetId, &like.Username, &like.Liked)
+		t.logger.Printf("tweetId: %v\n username: %v\n liked: %v\n", like.TweetId, like.Username, like.Liked)
+		if err != nil {
+			t.logger.Println(err)
+			return nil, err
+		}
+
+		if like.Liked == true {
+			result = append(result, like.Username)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		t.logger.Println(err)
+		return nil, err
+	}
+	return result, nil
+}
+
 func (t *TweetRepoCassandraDb) CreateTweet(p *data.Tweet) (bool, error) {
 	t.logger.Println("Creating tweet...")
 	p.TweetId = gocql.TimeUUID()

@@ -26,6 +26,8 @@ type Tweets []*Tweet
 
 type Likes []*Like
 
+type LikesUsers []string
+
 func (p *Tweets) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(p)
@@ -57,6 +59,11 @@ func (p *Likes) ToJSON(w io.Writer) error {
 }
 
 func (p *TweetLikes) ToJSON(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(p)
+}
+
+func (p *LikesUsers) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(p)
 }

@@ -11,4 +11,5 @@ type TweetRepo interface {
 	LikeTweet(id gocql.UUID, username string) bool
 	GetTweetsByUser(username string) (data.Tweets, error)
 	GetLikes(id gocql.UUID) (int, error)
+	GetLikesUsers(id gocql.UUID) (data.LikesUsers, error)
 }

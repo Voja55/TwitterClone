@@ -71,6 +71,9 @@ func main() {
 	getLikeTweetRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getLikeTweetRouter.HandleFunc("/tweets/likes/{id}", tweetsHandler.GetLikes)
 
+	getLikeUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
+	getLikeUserRouter.HandleFunc("/tweets/likes/users/{id}", tweetsHandler.GetLikesUsers)
+
 	getTweetsByUserRouter := routerTweet.Methods(http.MethodGet).Subrouter()
 	getTweetsByUserRouter.HandleFunc("/tweets/user/{username}", tweetsHandler.GetTweetsByUser)
 
