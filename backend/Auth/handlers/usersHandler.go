@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"12factorapp/authorization"
 	"12factorapp/data"
 	"12factorapp/db"
 	"12factorapp/validation"
@@ -10,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -46,9 +48,9 @@ type PasswordReset struct {
 }
 
 type ChangePassword struct {
-	Username 	 string `json:"username"`
-	OldPassword  string `json:"oldPassword"`
-	NewPassword  string `json:"newPassword"`
+	Username    string `json:"username"`
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
 }
 
 type ResendCCode struct {
@@ -63,6 +65,21 @@ func NewUsersHandler(l *log.Logger, ur db.UserRepo) *UsersHandler {
 }
 
 func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
+
+	//Authorization ===============================================================================
+	authHeader := h.Header.Get("Authorization")
+	println("ovo je authheder: " + authHeader)
+	if !strings.HasPrefix(authHeader, "Bearer") {
+		http.Error(rw, "Not Authorized", http.StatusUnauthorized)
+		return
+	}
+	allowed := authorization.HasPermision(authHeader, "getUsers")
+	if allowed == false {
+		http.Error(rw, "You have no permission for this action", http.StatusMethodNotAllowed)
+		return
+	}
+	//=============================================================================================
+
 	users := u.userRepo.GetUsers()
 	err := users.ToJSON(rw)
 
@@ -304,13 +321,12 @@ func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request)
 		return
 	}
 
-
 	hashedPass, err := user.HashPassword(data.NewPassword)
 	if err != nil {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-	
+
 	user.Password = hashedPass
 
 	if !u.userRepo.UpdateUser(&user) {
@@ -346,7 +362,6 @@ func (u *UsersHandler) ResendCCode(rw http.ResponseWriter, req *http.Request) {
 
 	go SendMail(user.Email, "Confirmation code", strconv.Itoa(user.CCode))
 	rw.WriteHeader(http.StatusAccepted)
-
 
 }
 

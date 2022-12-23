@@ -1,0 +1,6 @@
+regular,false,getUsers
+regular,true,getUser
+regular,false,confirm
+regular,true,reqReset
+regular,true,reset
+regular,true,changePass
