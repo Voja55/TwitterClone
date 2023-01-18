@@ -53,10 +53,10 @@
                                 <label for="companyName">Company name</label>
                                 <input type="text" class="form-control gray" id="companyName" required
                                       [(ngModel)]="user.companyName" name="companyName"
-                                      #companyName="ngModel">
+                                      #companyName="ngModel" pattern="[a-zA-Z]+">
                                 <div [hidden]="companyName.valid || !companyName.touched"
                                       class="alert alert-danger">
-                                      Company name is required
+                                      Company name is required and can only contain letters
                                 </div>       
                           </div>
                     </div>
