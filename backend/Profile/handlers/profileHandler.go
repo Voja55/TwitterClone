@@ -3,6 +3,7 @@ package handlers
 import (
 	"Profile/data"
 	"Profile/db"
+	"Profile/validation"
 	"context"
 	"github.com/gorilla/mux"
 	"log"
@@ -51,20 +52,26 @@ func (p *ProfileHandler) CreateNormalProfile(rw http.ResponseWriter, h *http.Req
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-	_, err := p.profileRepo.GetProfile(profile.Username)
-	if err == nil {
-		rw.WriteHeader(http.StatusNotAcceptable)
-		return
-	}
 
-	status := p.profileRepo.CreateProfile(profile)
-	if status != true {
-		rw.WriteHeader(http.StatusNotAcceptable)
-		return
-	}
-	if status == true {
-		rw.WriteHeader(http.StatusAccepted)
-		return
+	if validation.ValidateFirstName(profile.FirstName) && validation.ValidateLastName(profile.LastName) &&
+		validation.ValidateAddress(profile.Address) {
+
+		_, err := p.profileRepo.GetProfile(profile.Username)
+		if err == nil {
+			rw.WriteHeader(http.StatusNotAcceptable)
+			return
+		}
+
+		status := p.profileRepo.CreateProfile(profile)
+		if status != true {
+			rw.WriteHeader(http.StatusNotAcceptable)
+			return
+		}
+		if status == true {
+			rw.WriteHeader(http.StatusAccepted)
+			return
+		}
+
 	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)
@@ -80,20 +87,23 @@ func (p *ProfileHandler) CreateBusinessProfile(rw http.ResponseWriter, h *http.R
 		return
 	}
 
-	_, err := p.profileRepo.GetProfile(profile.Username)
-	if err == nil {
-		rw.WriteHeader(http.StatusNotAcceptable)
-		return
-	}
+	if validation.ValidateCompanyName(profile.CompanyName) && validation.ValidateWebSite(profile.WebSite) {
 
-	status := p.profileRepo.CreateProfile(profile)
-	if status != true {
-		rw.WriteHeader(http.StatusNotAcceptable)
-		return
-	}
-	if status == true {
-		rw.WriteHeader(http.StatusAccepted)
-		return
+		_, err := p.profileRepo.GetProfile(profile.Username)
+		if err == nil {
+			rw.WriteHeader(http.StatusNotAcceptable)
+			return
+		}
+
+		status := p.profileRepo.CreateProfile(profile)
+		if status != true {
+			rw.WriteHeader(http.StatusNotAcceptable)
+			return
+		}
+		if status == true {
+			rw.WriteHeader(http.StatusAccepted)
+			return
+		}
 	}
 
 	rw.WriteHeader(http.StatusNotAcceptable)

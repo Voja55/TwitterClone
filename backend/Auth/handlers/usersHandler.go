@@ -199,26 +199,30 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 		u.logger.Println("Unable to convert to json :", err)
 		return
 	}
-	u.logger.Println(data)
-	//TODO proveri da li radi confirm jer se nalazi user po id a salje se usename
-	user, err := u.userRepo.GetUserByUsername(data.Username)
 
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusNotFound)
-		u.logger.Println("Unable to find user.", err)
-		return
-	}
+	if validation.ValidateUsername(data.Username) {
+		u.logger.Println(data)
+		user, err := u.userRepo.GetUserByUsername(data.Username)
 
-	if user.CCode != data.CCode {
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusNotFound)
+			u.logger.Println("Unable to find user.", err)
+			return
+		}
+
+		if user.CCode != data.CCode {
+			rw.WriteHeader(http.StatusNotAcceptable)
+			return
+		}
+		user.CCode = 0
+		if u.userRepo.UpdateUser(&user) == false {
+			rw.WriteHeader(http.StatusNotAcceptable)
+		}
+		rw.WriteHeader(http.StatusAccepted)
+	} else {
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
-	user.CCode = 0
-	if u.userRepo.UpdateUser(&user) == false {
-		rw.WriteHeader(http.StatusNotAcceptable)
-	}
-	rw.WriteHeader(http.StatusAccepted)
-
 }
 
 func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Request) {
