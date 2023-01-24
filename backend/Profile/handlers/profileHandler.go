@@ -53,8 +53,8 @@ func (p *ProfileHandler) CreateNormalProfile(rw http.ResponseWriter, h *http.Req
 		return
 	}
 
-	if validation.ValidateFirstName(profile.FirstName) && validation.ValidateLastName(profile.LastName) &&
-		validation.ValidateAddress(profile.Address) {
+	if validation.ValidateChar(profile.FirstName) && validation.ValidateChar(profile.LastName) &&
+		validation.ValidateChar(profile.Address) {
 
 		_, err := p.profileRepo.GetProfile(profile.Username)
 		if err == nil {
@@ -87,7 +87,7 @@ func (p *ProfileHandler) CreateBusinessProfile(rw http.ResponseWriter, h *http.R
 		return
 	}
 
-	if validation.ValidateCompanyName(profile.CompanyName) && validation.ValidateWebSite(profile.WebSite) {
+	if validation.ValidateChar(profile.CompanyName) && validation.ValidateCharAndNum(profile.WebSite) {
 
 		_, err := p.profileRepo.GetProfile(profile.Username)
 		if err == nil {

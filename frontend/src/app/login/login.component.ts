@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { throws } from 'assert';
 import { StoreService } from '../services/store-service.service';
 import { UserService } from '../services/user-service.service';
 

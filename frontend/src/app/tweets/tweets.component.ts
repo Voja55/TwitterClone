@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { of, Subscriber } from 'rxjs';
 import { Tweet } from '../model/tweet';
-import { map} from 'rxjs';
 import { TweetService } from '../services/tweet.service';
 
 

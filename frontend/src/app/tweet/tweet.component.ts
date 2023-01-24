@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tweet } from '../model/tweet';
-import { TweetLikes } from '../model/tweetLikes';
 import { StoreService } from '../services/store-service.service';
 import { TweetService } from '../services/tweet.service';
 

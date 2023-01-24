@@ -24,6 +24,9 @@ type UserRepoMongoDb struct {
 	client *mongo.Client
 }
 
+const gettingUser = "Getting user "
+const couldntFindUser = "couldn't find user"
+
 // NoSQL: Constructor which reads db configuration from environment
 func NewUserRepoDB(ctx context.Context, logger *log.Logger) (*UserRepoMongoDb, error) {
 	uri := os.Getenv("MONGO_DB_URI")
@@ -126,7 +129,7 @@ func (u UserRepoMongoDb) Register(p *data.User) bool {
 }
 
 func (u UserRepoMongoDb) GetUser(username string) (data.User, error) {
-	u.logger.Printf("Getting user ", username)
+	u.logger.Printf(gettingUser + username)
 	var result data.User
 
 	coll := u.getCollection()
@@ -135,7 +138,7 @@ func (u UserRepoMongoDb) GetUser(username string) (data.User, error) {
 
 	if err != nil {
 		u.logger.Println(err)
-		return result, errors.New("couldn't find user")
+		return result, errors.New(couldntFindUser)
 	}
 
 	return result, nil
@@ -164,7 +167,7 @@ func (u UserRepoMongoDb) LoginUser(username string, password string) (data.User,
 }
 
 func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
-	u.logger.Printf("Getting user ", username)
+	u.logger.Printf(gettingUser + username)
 	var result data.User
 
 	coll := u.getCollection()
@@ -173,14 +176,14 @@ func (u UserRepoMongoDb) GetUserByUsername(username string) (data.User, error) {
 
 	if err != nil {
 		u.logger.Println(err)
-		return result, errors.New("couldn't find user")
+		return result, errors.New(couldntFindUser)
 	}
 
 	return result, nil
 }
 
 func (u UserRepoMongoDb) GetUserByEmail(email string) (data.User, error) {
-	u.logger.Printf("Getting user ", email)
+	u.logger.Printf(gettingUser + email)
 	var result data.User
 
 	coll := u.getCollection()
@@ -189,7 +192,7 @@ func (u UserRepoMongoDb) GetUserByEmail(email string) (data.User, error) {
 
 	if err != nil {
 		u.logger.Println(err)
-		return result, errors.New("couldn't find user")
+		return result, errors.New(couldntFindUser)
 	}
 
 	return result, nil
