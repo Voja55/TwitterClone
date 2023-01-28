@@ -4,7 +4,4 @@ export class Tweet {
     text!: string;
     username!: string | null;
     likes!: number;
-
-    constructor() {
-    }
 }

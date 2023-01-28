@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { Router } from '@angular/router';
 import { Profile } from '../model/profile';
 import { ProfileService } from '../services/profile.service';
@@ -9,12 +9,10 @@ import { UserService } from '../services/user-service.service';
   templateUrl: './register-user.component.html',
   styleUrls: ['./register-user.component.css']
 })
-export class RegisterUserComponent implements OnInit {
+export class RegisterUserComponent {
 
   constructor(private userService: UserService, private router : Router, private profileService : ProfileService) { }
 
-  ngOnInit(): void {
-  }
 
   user : any = new Object;
   profile : Profile = new Profile();

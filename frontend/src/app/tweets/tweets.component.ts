@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { Tweet } from '../model/tweet';
 import { TweetService } from '../services/tweet.service';
@@ -9,13 +9,10 @@ import { TweetService } from '../services/tweet.service';
   templateUrl: './tweets.component.html',
   styleUrls: ['./tweets.component.css']
 })
-export class TweetsComponent implements OnInit {
+export class TweetsComponent {
 
   constructor(private tweetService : TweetService) { 
     this.getTweets();
-  }
-
-  ngOnInit(): void {
   }
 
   tweets!: Observable<Tweet[]>;

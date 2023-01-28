@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tweet } from '../model/tweet';
 import { StoreService } from '../services/store-service.service';
@@ -9,12 +9,9 @@ import { TweetService } from '../services/tweet.service';
   templateUrl: './tweet-popup.component.html',
   styleUrls: ['./tweet-popup.component.css']
 })
-export class TweetPopupComponent implements OnInit {
+export class TweetPopupComponent {
 
   constructor(private modalService: NgbModal, private store : StoreService, private tweetService : TweetService) { }
-
-  ngOnInit(): void {
-  }
 
   openLg(content : any) {
     this.modalService.open(content, { size: 'lg' });

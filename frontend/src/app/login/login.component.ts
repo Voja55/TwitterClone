@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { Router } from '@angular/router';
 import { StoreService } from '../services/store-service.service';
 import { UserService } from '../services/user-service.service';
@@ -8,7 +8,7 @@ import { UserService } from '../services/user-service.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   captcha: string;
   email: string;
@@ -18,9 +18,6 @@ export class LoginComponent implements OnInit {
     this.captcha = '';
     this.email = 'Test';
    }
-
-  ngOnInit(): void {
-  }
 
   resolved(captchaResponse: string) {
     this.captcha = captchaResponse;
