@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tweet } from '../model/tweet';
-import { TweetLikes } from '../model/tweetLikes';
 import { StoreService } from '../services/store-service.service';
 import { TweetService } from '../services/tweet.service';
 
@@ -34,7 +33,6 @@ export class TweetComponent implements OnInit {
   }
 
   likeTweet(){
-    //this.tweet.username = this.store.getUsername();
     this.tweetService.likeTweet(this.store.getUsername(), this.tweet.tweetId).subscribe(data => {
       console.log(data);
       this.getLikes()

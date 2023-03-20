@@ -8,7 +8,7 @@ export class StoreService{
 
   constructor() { 
     if(sessionStorage.getItem('jwt')){
-      var t = sessionStorage.getItem('jwt')
+      let t = sessionStorage.getItem('jwt')
       this.loginStatus = true;
       this.decodedToken = this.getDecodedAccessToken(t)
       this.role = this.decodedToken.role;   

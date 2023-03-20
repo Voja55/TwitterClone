@@ -17,6 +17,8 @@ type TweetsHandler struct {
 	tweetRepo db.TweetRepo
 }
 
+const unableToConvertToJson = "Unable to convert to json"
+
 // NewUsersHandler Injecting the logger makes this code much more testable.
 func NewTweetsHandler(l *log.Logger, ur db.TweetRepo) *TweetsHandler {
 	return &TweetsHandler{l, ur}
@@ -33,8 +35,8 @@ func (t *TweetsHandler) GetTweets(rw http.ResponseWriter, h *http.Request) {
 	err = tweets.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		t.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		t.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 }
@@ -56,8 +58,8 @@ func (t *TweetsHandler) GetTweetsByUser(rw http.ResponseWriter, h *http.Request)
 	err = tweets.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		t.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		t.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 }
@@ -81,8 +83,8 @@ func (t *TweetsHandler) GetLikes(rw http.ResponseWriter, h *http.Request) {
 	err = tweetLikes.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		t.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		t.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 }
@@ -105,8 +107,8 @@ func (t *TweetsHandler) GetLikesUsers(rw http.ResponseWriter, h *http.Request) {
 	err = likesUsers.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		t.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		t.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 }

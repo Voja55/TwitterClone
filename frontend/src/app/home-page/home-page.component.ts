@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { StoreService } from '../services/store-service.service';
 
 @Component({
@@ -6,11 +6,8 @@ import { StoreService } from '../services/store-service.service';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent {
 
   constructor(public store : StoreService) { }
-
-  ngOnInit(): void {
-  }
 
 }

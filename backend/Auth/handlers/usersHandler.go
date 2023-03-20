@@ -59,6 +59,10 @@ type ResendCCode struct {
 
 var jwtKey = []byte("secret_key")
 
+const unableToConvertToJson = "Unable to convert to json"
+
+const unableToFindUser = "Unable to find user."
+
 // NewUsersHandler Injecting the logger makes this code much more testable.
 func NewUsersHandler(l *log.Logger, ur db.UserRepo) *UsersHandler {
 	return &UsersHandler{l, ur}
@@ -85,7 +89,7 @@ func (u *UsersHandler) GetUsers(rw http.ResponseWriter, h *http.Request) {
 
 	if err != nil {
 		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 
@@ -99,15 +103,15 @@ func (u *UsersHandler) GetUser(rw http.ResponseWriter, h *http.Request) {
 
 	if er != nil {
 		http.Error(rw, er.Error(), http.StatusNotFound)
-		u.logger.Println("Unable to find user.", er)
+		u.logger.Println(unableToFindUser, er)
 		return
 	}
 
 	err := user.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 
@@ -120,8 +124,8 @@ func (u *UsersHandler) LoginUser(rw http.ResponseWriter, req *http.Request) {
 	err := decoder.Decode(&logged)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 	u.logger.Println(logged)
@@ -195,8 +199,8 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 	err := decoder.Decode(&data)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 
@@ -206,7 +210,7 @@ func (u *UsersHandler) Confirm(rw http.ResponseWriter, req *http.Request) {
 
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusNotFound)
-			u.logger.Println("Unable to find user.", err)
+			u.logger.Println(unableToFindUser, err)
 			return
 		}
 
@@ -231,8 +235,8 @@ func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Re
 	err := decoder.Decode(&data)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 	u.logger.Println(data)
@@ -241,7 +245,7 @@ func (u *UsersHandler) RequestResetPassword(rw http.ResponseWriter, req *http.Re
 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusNotFound)
-		u.logger.Println("Unable to find user.", err)
+		u.logger.Println(unableToFindUser, err)
 		return
 	}
 	//TODO zameni base64 sa nekom vrstom sifrovanja
@@ -258,8 +262,8 @@ func (u *UsersHandler) ResetPassword(rw http.ResponseWriter, req *http.Request) 
 	err := decoder.Decode(&data)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 	u.logger.Println(data)
@@ -275,7 +279,7 @@ func (u *UsersHandler) ResetPassword(rw http.ResponseWriter, req *http.Request) 
 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusNotFound)
-		u.logger.Println("Unable to find user.", err)
+		u.logger.Println(unableToFindUser, err)
 		return
 	}
 
@@ -298,8 +302,8 @@ func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request)
 	err := decoder.Decode(&data)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 	u.logger.Println(data)
@@ -307,7 +311,7 @@ func (u *UsersHandler) ChangePassword(rw http.ResponseWriter, req *http.Request)
 	user, err := u.userRepo.GetUserByUsername(data.Username)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusNotFound)
-		u.logger.Println("Unable to find user.", err)
+		u.logger.Println(unableToFindUser, err)
 		return
 	}
 
@@ -346,8 +350,8 @@ func (u *UsersHandler) ResendCCode(rw http.ResponseWriter, req *http.Request) {
 	err := decoder.Decode(&data)
 
 	if err != nil {
-		http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-		u.logger.Println("Unable to convert to json :", err)
+		http.Error(rw, unableToConvertToJson, http.StatusInternalServerError)
+		u.logger.Println(unableToConvertToJson, " :", err)
 		return
 	}
 	u.logger.Println(data)
@@ -355,7 +359,7 @@ func (u *UsersHandler) ResendCCode(rw http.ResponseWriter, req *http.Request) {
 	user, err := u.userRepo.GetUserByUsername(data.Username)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusNotFound)
-		u.logger.Println("Unable to find user.", err)
+		u.logger.Println(unableToFindUser, err)
 		return
 	}
 

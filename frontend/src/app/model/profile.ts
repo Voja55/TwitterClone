@@ -1,5 +1,4 @@
 export class Profile{
-    constructor() {}
     username!: string ; 
 	firstName!: string ;
 	lastName!: string ;
